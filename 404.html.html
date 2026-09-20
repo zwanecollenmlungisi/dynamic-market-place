@@ -6,7 +6,7 @@
   <script>
     // This script is from the popular 'spa-github-pages' solution.
     // It handles the redirect to index.html and passes along the route.
-    var pathSegmentsToKeep = 0; // Set to 0 if deployed at root, 1 if in a subfolder
+    var pathSegmentsToKeep = 1; // Set to 0 if deployed at root, 1 if in a subfolder
     var l = window.location;
     l.replace(
       l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
