@@ -1676,5 +1676,18 @@ $$(".tab-btn").forEach(b => b.addEventListener("click", () => switchPage(b.datas
 addSlot(1, "09:00", "17:00");
 addSlot(6, "10:00", "14:00");
 </script>
+  <script type="text/javascript">
+  // This script handles the redirect from 404.html
+  (function(l) {
+    if (l.search[1] === '/' ) {
+      var decoded = l.search.slice(1).split('&').map(function(s) { 
+        return s.replace(/~and~/g, '&')
+      }).join('?');
+      window.history.replaceState(null, null,
+          l.pathname.slice(0, -1) + decoded + l.hash
+      );
+    }
+  }(window.location))
+</script>
 </body>
 </html>
