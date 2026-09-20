@@ -811,9 +811,14 @@ $("#signupForm").addEventListener("submit", async (e) => {
   busy(btn, true, "Creating account…");
   setMsg("");
 
-  const { data, error } = await sb.auth.signUp({ email, password, options: { data: payload } });
-  busy(btn, false, "Create my account");
-  if (error) return setMsg(error.message, "err");
+const { data, error } = await sb.auth.signUp({
+  email,
+  password,
+  options: { 
+    data: payload,
+    emailRedirectTo: window.location.origin + window.location.pathname 
+  }
+});
 
   if (!data.session) {
     setMsg("✅ Account created! Check your email inbox to confirm your address, then sign in.", "ok");
