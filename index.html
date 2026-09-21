@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dynamic Market Place</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+  :root{
+    --bg:#070d1a; --panel:#101a2e; --panel2:#0c1524; --line:#1e2b45;
+    --txt:#e6eefc; --muted:#8fa3c4; --accent:#22d3ee; --accent2:#6366f1;
+    --ok:#22c55e; --warn:#f59e0b; --err:#ef4444; --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--txt);min-height:100vh;
+    background:
+      radial-gradient(1100px 600px at 12% -12%, #16305a 0%, transparent 60%),
+      radial-gradient(900px 520px at 102% -5%, #2b1a5e 0%, transparent 55%),
+      var(--bg);
+  }
+  .hidden{display:none !important}
+  .muted{color:var(--muted)}
+  .small{font-size:12.5px}
+  h1,h2,h3{margin:0 0 8px}
+  a{color:var(--accent)}
+
+  /* ---------- buttons & inputs ---------- */
+  .btn{
+    border:1px solid var(--line);background:#16223a;color:var(--txt);
+    padding:10px 16px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;
+    transition:.15s;
+  }
+  .btn:hover{background:#1d2c49;transform:translateY(-1px)}
+  .btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#04121f}
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.ghost{background:transparent}
+  .btn.danger{background:#3b1116;border-color:#7a1e26;color:#ffb3b3}
+  .btn.ok{background:#0f3a24;border-color:#1f6b41;color:#9df3c1}
+  .btn.sm{padding:6px 12px;font-size:12.5px}
+  .btn:disabled{opacity:.55;cursor:not-allowed;transform:none}
+  .btn.wide{width:100%}
+  input,select,textarea{
+    width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--line);
+    background:var(--panel2);color:var(--txt);font-size:14px;font-family:inherit;outline:none;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(34,211,238,.13)}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:12px}
+  label span{display:block;margin-bottom:6px;font-weight:600;color:#b9c8e4}
+  textarea{resize:vertical;min-height:110px}
+
+  /* ---------- auth ---------- */
+  .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:26px}
+  .auth-card{
+    width:100%;max-width:520px;background:rgba(16,26,46,.86);backdrop-filter:blur(14px);
+    border:1px solid var(--line);border-radius:20px;padding:28px;
+    box-shadow:0 30px 80px rgba(0,0,0,.55);
+  }
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .logo{
+    width:44px;height:44px;border-radius:13px;flex:0 0 auto;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:grid;place-items:center;font-size:22px;color:#04121f;font-weight:800;
+  }
+  .brand h1{font-size:19px;margin:0;letter-spacing:.3px}
+  .brand p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+  .tabs{display:flex;gap:6px;background:var(--panel2);padding:5px;border-radius:12px;margin-bottom:20px;border:1px solid var(--line)}
+  .tab{flex:1;padding:10px;border:none;background:transparent;color:var(--muted);border-radius:9px;cursor:pointer;font-weight:700;font-size:13.5px}
+  .tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#04121f}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
+  .msg{margin:12px 0 0;font-size:13px;min-height:18px}
+  .msg.err{color:#ff9b9b} .msg.ok{color:#8ff0b5}
+
+  /* ---------- app shell ---------- */
+  .topbar{
+    display:flex;align-items:center;gap:14px;padding:12px 20px;flex-wrap:wrap;
+    background:rgba(10,17,32,.9);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;
+  }
+  .topbar .brand{margin:0}
+  .topbar nav{display:flex;gap:4px;margin-left:8px;flex-wrap:wrap}
+  .tab-btn{
+    border:1px solid transparent;background:transparent;color:var(--muted);
+    padding:9px 13px;border-radius:10px;cursor:pointer;font-weight:700;font-size:13px;
+    white-space:nowrap;
+  }
+  .tab-btn:hover{color:var(--txt);background:#16223a}
+  .tab-btn.active{background:#16223a;border-color:var(--line);color:var(--txt)}
+  .spacer{flex:1}
+  .user-chip{display:flex;align-items:center;gap:12px;font-size:13.5px}
+  .avatar{
+    width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:grid;place-items:center;color:#04121f;font-weight:800;font-size:14px;
+  }
+  main{max-width:1180px;margin:0 auto;padding:24px 20px 70px}
+  .page-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+  .page-head h2{font-size:22px}
+  .search{margin-left:auto;max-width:320px}
+
+  .banner{
+    border:1px solid #4a3a12;background:rgba(245,158,11,.11);color:#ffd88a;
+    padding:12px 16px;border-radius:12px;font-size:13.5px;margin-bottom:20px;line-height:1.55;
+  }
+  .banner.ok{border-color:#14532d;background:rgba(34,197,94,.12);color:#a7f3c6}
+  .banner.err{border-color:#7a1e26;background:rgba(239,68,68,.10);color:#ffb3b3}
+
+  /* ---------- cards ---------- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:18px}
+  .card{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;cursor:pointer;transition:.18s;display:flex;flex-direction:column;
+  }
+  .card:hover{transform:translateY(-4px);border-color:#2c4470;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+  .thumb{position:relative;aspect-ratio:4/3;background:#0a1322;overflow:hidden}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .noimg{display:grid;place-items:center;height:100%;color:#3d5578;font-size:13px}
+  .badge{
+    position:absolute;right:8px;bottom:8px;background:rgba(4,12,24,.82);
+    border:1px solid var(--line);padding:3px 9px;border-radius:20px;font-size:11.5px;font-weight:700;
+  }
+  .badge.top{top:8px;bottom:auto;left:8px;right:auto;background:rgba(34,211,238,.9);color:#04121f;border:none}
+  .card-body{padding:13px 14px 15px;display:flex;flex-direction:column;gap:5px}
+  .card-body h3{font-size:15px;line-height:1.3;margin:0}
+  .price{font-size:17px;font-weight:800;color:var(--accent)}
+  .tick{color:var(--ok);font-weight:700}
+  .tag{
+    display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px;
+    background:#182642;color:#9fb6da;border:1px solid var(--line);margin:2px 4px 0 0;
+  }
+  .empty{
+    grid-column:1/-1;text-align:center;padding:56px 20px;color:var(--muted);
+    border:1px dashed var(--line);border-radius:var(--radius);
+  }
+
+  /* ---------- filters ---------- */
+  .filters{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:14px;margin-bottom:20px;
+  }
+  .filters label{margin:0}
+  .filters input,.filters select{padding:9px 10px;font-size:13px}
+  .switch{display:flex;align-items:center;gap:8px;color:#b9c8e4;font-weight:600;font-size:13px}
+  .switch input{width:auto}
+
+  /* ---------- panel ---------- */
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
+  .drop{
+    border:2px dashed #2b4066;border-radius:12px;padding:24px;text-align:center;
+    color:var(--muted);cursor:pointer;transition:.15s;background:rgba(10,19,34,.6)
+  }
+  .drop:hover{border-color:var(--accent);color:var(--txt)}
+  .previews{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px;margin-top:14px}
+  .pv{position:relative;aspect-ratio:1;border-radius:10px;overflow:hidden;border:1px solid var(--line)}
+  .pv img{width:100%;height:100%;object-fit:cover}
+  .pv button{
+    position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;
+    border:none;background:rgba(239,68,68,.92);color:#fff;cursor:pointer;font-size:13px;line-height:1;font-weight:800
+  }
+  .counter{font-size:12.5px;color:var(--muted);margin-top:8px}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 14px}
+  @media(max-width:640px){.row,.row3,.grid2{grid-template-columns:1fr}.search{margin-left:0;width:100%}}
+
+  /* ---------- availability builder ---------- */
+  .slots{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+  .slot{
+    display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:8px;align-items:center;
+    background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px
+  }
+  .slot select,.slot input{padding:7px 9px;font-size:13px}
+  @media(max-width:640px){.slot{grid-template-columns:1fr 1fr;gap:6px}}
+  .slot-x{background:#3b1116;border:1px solid #7a1e26;color:#ffb3b3;width:30px;height:30px;border-radius:8px;cursor:pointer;font-weight:800}
+
+  /* ---------- bookings ---------- */
+  .bk{
+    display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    padding:16px;margin-bottom:12px;
+  }
+  .bk .when{font-size:13px;color:var(--muted)}
+  .bk .who{font-size:12.5px;color:var(--muted);margin-top:3px}
+  .bk .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .pill{
+    padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800;letter-spacing:.4px;
+    text-transform:uppercase;display:inline-block;
+  }
+  .pill.requested{background:rgba(245,158,11,.15);color:#ffd88a;border:1px solid #4a3a12}
+  .pill.accepted {background:rgba(34,197,94,.14);color:#a7f3c6;border:1px solid #14532d}
+  .pill.declined {background:rgba(239,68,68,.12);color:#ffb3b3;border:1px solid #7a1e26}
+  .pill.completed{background:rgba(99,102,241,.16);color:#c7c9ff;border:1px solid #3a3d7a}
+  .pill.cancelled, .pill.no_show {background:#1a2438;color:#8fa3c4;border:1px solid var(--line)}
+  @media(max-width:640px){.bk{grid-template-columns:1fr}.bk .actions{justify-content:flex-start}}
+
+  .section-tabs{display:flex;gap:6px;background:var(--panel2);padding:5px;border-radius:12px;border:1px solid var(--line);margin-bottom:18px;width:fit-content}
+  .section-tab{padding:8px 16px;border:none;background:transparent;color:var(--muted);border-radius:9px;cursor:pointer;font-weight:700;font-size:13px}
+  .section-tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#04121f}
+
+  /* ---------- modal ---------- */
+  .modal{
+    position:fixed;inset:0;background:rgba(3,7,15,.8);backdrop-filter:blur(6px);
+    display:grid;place-items:center;padding:20px;z-index:80;
+  }
+  .modal-card{
+    width:100%;max-width:900px;max-height:92vh;overflow:auto;background:var(--panel);
+    border:1px solid var(--line);border-radius:18px;position:relative;
+  }
+  .modal-grid{display:grid;grid-template-columns:1.05fr 1fr}
+  @media(max-width:760px){.modal-grid{grid-template-columns:1fr}}
+  .gallery{background:#08111f;padding:14px}
+  .gallery .main{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:12px;background:#0a1322}
+  .thumbs{display:flex;gap:8px;margin-top:10px;overflow-x:auto;padding-bottom:4px}
+  .thumbs img{width:62px;height:62px;object-fit:cover;border-radius:8px;cursor:pointer;opacity:.6;border:2px solid transparent;flex:0 0 auto}
+  .thumbs img.active{opacity:1;border-color:var(--accent)}
+  .modal-info{padding:22px}
+  .modal-info h2{font-size:21px}
+  .modal-info .price{font-size:26px;margin:8px 0 14px}
+  .kv{display:flex;justify-content:space-between;gap:14px;font-size:13.5px;padding:9px 0;border-bottom:1px solid #16223a}
+  .kv span:first-child{color:var(--muted)}
+  .close-x{
+    position:absolute;top:14px;right:16px;background:rgba(6,14,26,.85);border:1px solid var(--line);
+    color:var(--txt);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:17px;z-index:2
+  }
+  .bk-form{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:16px}
+  .bk-form h4{margin:0 0 12px;font-size:14px;color:#b9c8e4}
+
+  /* ---------- gate screens ---------- */
+  .gate-wrap{
+    min-height:80vh;display:flex;align-items:center;justify-content:center;padding:20px;
+  }
+  .gate-card{
+    width:100%;max-width:600px;background:rgba(16,26,46,.9);backdrop-filter:blur(14px);
+    border:1px solid var(--line);border-radius:20px;padding:32px;text-align:center;
+    box-shadow:0 30px 80px rgba(0,0,0,.55);
+  }
+  .gate-card .logo{margin:0 auto 20px;width:56px;height:56px;font-size:28px}
+  .gate-card h1{font-size:22px;margin-bottom:10px}
+  .gate-card .lead{color:var(--muted);line-height:1.6;margin:10px 0 20px;font-size:14px}
+  .price-box{
+    background:#0c1524;padding:22px;border-radius:14px;border:1px solid #1e2b45;
+    margin-bottom:22px;text-align:left;
+  }
+  .price-box .kv:last-child{border-bottom:none;font-size:18px;padding-top:14px}
+  .price-box .total{color:var(--accent);font-weight:800}
+
+  /* ---------- toast ---------- */
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translate(-50%,150%);
+    background:#16223a;border:1px solid var(--line);border-left:4px solid var(--accent);
+    padding:13px 20px;border-radius:12px;font-size:13.5px;z-index:200;
+    transition:transform .3s cubic-bezier(.2,.9,.3,1.2);max-width:90vw;
+  }
+  .toast.show{transform:translate(-50%,0)}
+  .toast.err{border-left-color:var(--err)}
+  .toast.ok{border-left-color:var(--ok)}
+  .spin{
+    width:15px;height:15px;border:2px solid rgba(255,255,255,.28);border-top-color:#04121f;
+    border-radius:50%;display:inline-block;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px
+  }
+  @keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div id="toast" class="toast"></div>
+
+<!-- ============================= AUTH VIEW ============================= -->
+<section id="authView" class="auth-wrap">
+  <div class="auth-card">
+    <div class="brand">
+      <div class="logo">D</div>
+      <div>
+        <h1>Dynamic Market Place</h1>
+        <p>Where sellers &amp; consumers meet to trade</p>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" data-tab="signin" type="button">Sign in</button>
+      <button class="tab" data-tab="signup" type="button">Create account</button>
+    </div>
+
+    <form id="signinForm" autocomplete="on">
+      <label><span>Email address</span>
+        <input type="email" name="email" placeholder="you@example.com" required />
+      </label>
+      <label><span>Password</span>
+        <input type="password" name="password" placeholder="••••••••" required />
+      </label>
+      <button class="btn primary wide" type="submit" id="signinBtn">Sign in</button>
+    </form>
+
+    <form id="signupForm" class="hidden" autocomplete="on">
+      <div class="grid2">
+        <label><span>Full name *</span>
+          <input name="full_name" placeholder="Jane Wanjiru Doe" required />
+        </label>
+        <label><span>ID / Passport number *</span>
+          <input name="id_number" placeholder="12345678" required />
+        </label>
+      </div>
+      <div class="grid2">
+        <label><span>Email address *</span>
+          <input type="email" name="email" placeholder="you@example.com" required />
+        </label>
+        <label><span>Phone number *</span>
+          <input name="phone" placeholder="+27 71 234 5678" required />
+        </label>
+      </div>
+      <div class="grid2">
+        <label><span>Country</span>
+          <input name="country" placeholder="South Africa" value="South Africa" />
+        </label>
+        <label><span>City / Town</span>
+          <input name="city" placeholder="Johannesburg" />
+        </label>
+      </div>
+      <label><span>I want to</span>
+        <select name="role">
+          <option value="buyer">Buy on the marketplace</option>
+          <option value="seller">Sell on the marketplace</option>
+          <option value="both">Buy &amp; sell</option>
+        </select>
+      </label>
+      <label><span>Password * (min 6 characters)</span>
+        <input type="password" name="password" minlength="6" placeholder="••••••••" required />
+      </label>
+      <button class="btn primary wide" type="submit" id="signupBtn">Create my account</button>
+      <p class="small muted" style="margin:12px 0 0;line-height:1.5">
+        By registering you agree that your full name, ID number, email and phone number
+        are collected for identity verification and safer trading.
+      </p>
+    </form>
+
+    <p id="authMsg" class="msg"></p>
+  </div>
+</section>
+
+<!-- ============================= APP VIEW ============================= -->
+<section id="appView" class="hidden">
+  <header class="topbar hidden" id="appTopbar">
+    <div class="brand">
+      <div class="logo" style="width:36px;height:36px;font-size:18px;border-radius:11px">D</div>
+      <h1 style="font-size:16px">Dynamic Market Place</h1>
+    </div>
+    <nav>
+      <button class="tab-btn active" data-page="market"   type="button">🛒 Market</button>
+      <button class="tab-btn"        data-page="services" type="button">💆 Services</button>
+      <button class="tab-btn"        data-page="sell"     type="button">＋ Sell item</button>
+      <button class="tab-btn"        data-page="offer"    type="button">✨ Offer service</button>
+      <button class="tab-btn"        data-page="bookings" type="button">📅 Bookings <span id="bkBadge"></span></button>
+      <button class="tab-btn"        data-page="profile"  type="button">👤 Profile</button>
+    </nav>
+    <div class="spacer"></div>
+    <div class="user-chip">
+      <div class="avatar" id="avatarInitial">?</div>
+      <div style="line-height:1.25">
+        <div id="userName" style="font-weight:700">—</div>
+        <div id="userRole" class="small muted">—</div>
+      </div>
+      <button class="btn ghost" id="signOutBtn" type="button">Sign out</button>
+    </div>
+  </header>
+
+  <main id="appMain">
+    <!-- ---------- GATE CONTAINER (payment / renewal / pending) ---------- -->
+    <div id="gateContainer" class="hidden"></div>
+
+    <!-- ---------- APP CONTENT (market, services, forms, profile) ---------- -->
+    <div id="appContent" class="hidden">
+      <div id="verifyBanner" class="banner hidden"></div>
+
+      <!-- MARKET PAGE -->
+      <div id="page-market" class="page">
+        <div class="page-head">
+          <div>
+            <h2>Marketplace</h2>
+            <p class="small muted">Browse items listed by verified sellers</p>
+          </div>
+          <div class="search">
+            <input id="searchInput" placeholder="Search items, categories, locations…" />
+          </div>
+        </div>
+        <div id="grid" class="grid"></div>
+      </div>
+
+      <!-- SERVICES PAGE -->
+      <div id="page-services" class="page hidden">
+        <div class="page-head">
+          <div>
+            <h2>Personal Services</h2>
+            <p class="small muted">Book verified providers — wellness, beauty, fitness, coaching &amp; more</p>
+          </div>
+          <div class="search">
+            <input id="svcQ" placeholder="Search services, providers, areas…" />
+          </div>
+        </div>
+
+        <div class="filters">
+          <label><span>Category</span>
+            <select id="svcCategory"><option value="">All categories</option></select>
+          </label>
+          <label><span>Delivery</span>
+            <select id="svcMode">
+              <option value="">Any</option>
+              <option value="in_person">At provider</option>
+              <option value="at_client">At my location</option>
+              <option value="remote">Remote / online</option>
+              <option value="flexible">Flexible</option>
+            </select>
+          </label>
+          <label><span>Area</span>
+            <input id="svcArea" placeholder="City or region" />
+          </label>
+          <label><span>Max price</span>
+            <input id="svcMaxPrice" type="number" min="0" step="1" placeholder="Any" />
+          </label>
+          <label class="switch" style="align-self:end;padding-bottom:10px">
+            <input type="checkbox" id="svcVerifiedOnly" /> Verified providers only
+          </label>
+          <div style="display:flex;align-items:flex-end;gap:8px">
+            <button class="btn primary sm" id="svcApply" type="button">Apply</button>
+            <button class="btn sm" id="svcClear" type="button">Clear</button>
+          </div>
+        </div>
+
+        <div id="svcGrid" class="grid"></div>
+      </div>
+
+      <!-- SELL ITEM PAGE -->
+      <div id="page-sell" class="page hidden">
+        <div class="page-head">
+          <div>
+            <h2>List a new item</h2>
+            <p class="small muted">Add a clear description and up to 10 pictures</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <form id="itemForm">
+            <label><span>Item title *</span>
+              <input name="title" maxlength="90" placeholder="e.g. Samsung Galaxy S23 Ultra 256GB" required />
+            </label>
+            <div class="row">
+              <label><span>Price *</span>
+                <input name="price" type="number" min="0" step="0.01" placeholder="4500" required />
+              </label>
+              <label><span>Currency</span>
+                <select name="currency">
+                  <option>ZAR</option><option>USD</option><option>KES</option>
+                  <option>NGN</option><option>GBP</option><option>EUR</option>
+                </select>
+              </label>
+            </div>
+            <div class="row">
+              <label><span>Category</span>
+                <input name="category" list="cats" placeholder="Electronics" />
+                <datalist id="cats">
+                  <option>Electronics</option><option>Phones &amp; Tablets</option>
+                  <option>Fashion</option><option>Home &amp; Furniture</option>
+                  <option>Vehicles</option><option>Property</option>
+                  <option>Agriculture</option><option>Beauty</option>
+                  <option>Sports</option><option>Other</option>
+                </datalist>
+              </label>
+              <label><span>Location</span>
+                <input name="location" placeholder="Johannesburg, South Africa" />
+              </label>
+            </div>
+            <label><span>Description *</span>
+              <textarea name="description" maxlength="2000"
+                placeholder="Describe condition, size, brand, age, delivery options, warranty…" required></textarea>
+            </label>
+
+            <label><span>Pictures — up to 10 *</span></label>
+            <div class="drop" id="dropZone">
+              <div style="font-size:26px">📷</div>
+              <div style="font-weight:700;margin-top:6px">Click to choose images</div>
+              <div class="small">JPG, PNG or WEBP · maximum 10 pictures</div>
+            </div>
+            <input type="file" id="itemImages" accept="image/*" multiple class="hidden" />
+            <div class="previews" id="previews"></div>
+            <div class="counter" id="imgCounter">0 / 10 pictures selected</div>
+
+            <div style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn primary" type="submit" id="publishBtn">Publish listing</button>
+              <button class="btn" type="reset" id="resetBtn">Clear form</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- OFFER SERVICE PAGE -->
+      <div id="page-offer" class="page hidden">
+        <div class="page-head">
+          <div>
+            <h2>Offer a personal service</h2>
+            <p class="small muted">Publish what you offer, your weekly hours and pricing</p>
+          </div>
+        </div>
+
+        <div id="offerNotice" class="banner hidden"></div>
+
+        <div class="panel">
+          <form id="serviceForm">
+            <div class="row">
+              <label><span>Service category *</span>
+                <select name="category_slug" id="svcFormCategory" required>
+                  <option value="">Select a category…</option>
+                </select>
+              </label>
+              <label><span>Service title *</span>
+                <input name="title" maxlength="100" placeholder="e.g. Deep Tissue Massage — 60 minutes" required />
+              </label>
+            </div>
+
+            <label><span>Description *</span>
+              <textarea name="description" maxlength="2000"
+                placeholder="What you offer, what a client can expect, what to bring, preparation, etc." required></textarea>
+            </label>
+
+            <div class="row3">
+              <label><span>Price *</span>
+                <input name="price" type="number" min="0" step="0.01" required />
+              </label>
+              <label><span>Currency</span>
+                <select name="currency">
+                  <option>ZAR</option><option>USD</option><option>KES</option>
+                  <option>NGN</option><option>GBP</option><option>EUR</option>
+                </select>
+              </label>
+              <label><span>Pricing</span>
+                <select name="pricing_type">
+                  <option value="per_hour">Per hour</option>
+                  <option value="per_session" selected>Per session</option>
+                  <option value="per_day">Per day</option>
+                  <option value="per_package">Per package</option>
+                  <option value="starting_at">Starting at</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="row3">
+              <label><span>Delivery mode *</span>
+                <select name="delivery_mode" id="svcFormMode">
+                  <option value="in_person">At my location</option>
+                  <option value="at_client">At client's location</option>
+                  <option value="remote">Remote / online</option>
+                  <option value="flexible">Flexible</option>
+                </select>
+              </label>
+              <label><span>Session length (min)</span>
+                <input name="duration_minutes" type="number" min="15" max="1440" step="15" placeholder="60" />
+              </label>
+              <label><span>Service area</span>
+                <input name="service_area" placeholder="Johannesburg, South Africa" />
+              </label>
+            </div>
+
+            <div class="row3">
+              <label><span>Min notice (hours)</span>
+                <input name="min_notice_hours" type="number" min="0" value="24" />
+              </label>
+              <label><span>Cancellation (hours)</span>
+                <input name="cancellation_hours" type="number" min="0" value="24" />
+              </label>
+              <label><span>Languages (comma-sep)</span>
+                <input name="languages" placeholder="English, Zulu" />
+              </label>
+            </div>
+
+            <label><span>Tags (comma-separated)</span>
+              <input name="tags" placeholder="relaxation, sports, home-visit" />
+            </label>
+
+            <label><span>Pictures — up to 10 *</span></label>
+            <div class="drop" id="svcDropZone">
+              <div style="font-size:26px">📷</div>
+              <div style="font-weight:700;margin-top:6px">Click to choose images</div>
+              <div class="small">JPG, PNG or WEBP · maximum 10 pictures</div>
+            </div>
+            <input type="file" id="svcImages" accept="image/*" multiple class="hidden" />
+            <div class="previews" id="svcPreviews"></div>
+            <div class="counter" id="svcImgCounter">0 / 10 pictures selected</div>
+
+            <label style="margin-top:22px"><span>Weekly availability</span></label>
+            <p class="small muted" style="margin:-6px 0 10px">
+              Add the time windows you are normally available.
+            </p>
+            <div class="slots" id="slots"></div>
+            <button class="btn sm" type="button" id="addSlot" style="margin-top:10px">＋ Add time slot</button>
+
+            <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn primary" type="submit" id="svcPublishBtn">Publish service</button>
+              <button class="btn" type="reset" id="svcResetBtn">Clear form</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- BOOKINGS PAGE -->
+      <div id="page-bookings" class="page hidden">
+        <div class="page-head">
+          <div>
+            <h2>Bookings</h2>
+            <p class="small muted">Requests you've made and requests you've received</p>
+          </div>
+        </div>
+        <div class="section-tabs">
+          <button class="section-tab active" data-bk="incoming" type="button">Incoming (provider)</button>
+          <button class="section-tab"        data-bk="outgoing" type="button">My requests (customer)</button>
+        </div>
+        <div id="bkList"></div>
+      </div>
+
+      <!-- PROFILE PAGE -->
+      <div id="page-profile" class="page hidden">
+        <div class="page-head"><div><h2>My profile &amp; verification</h2>
+          <p class="small muted">Your identity details on file</p></div></div>
+        <div class="panel">
+          <div id="profileDetails"></div>
+          <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn" id="refreshProfileBtn" type="button">Refresh</button>
+            <button class="btn" id="myListingsBtn" type="button">My item listings</button>
+            <button class="btn" id="myServicesBtn" type="button">My services</button>
+          </div>
+          <div id="myListings" class="grid" style="margin-top:22px"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<!-- ============================= ITEM MODAL ============================= -->
+<div id="modal" class="modal hidden">
+  <div class="modal-card">
+    <button class="close-x" id="modalClose" type="button">✕</button>
+    <div class="modal-grid">
+      <div class="gallery">
+        <img class="main" id="mMain" alt="" />
+        <div class="thumbs" id="mThumbs"></div>
+      </div>
+      <div class="modal-info">
+        <h2 id="mTitle"></h2>
+        <div class="price" id="mPrice"></div>
+        <p id="mDesc" class="small" style="line-height:1.65;color:#c4d3ec;white-space:pre-wrap"></p>
+        <div style="margin-top:16px">
+          <div class="kv"><span>Category</span><b id="mCat"></b></div>
+          <div class="kv"><span>Location</span><b id="mLoc"></b></div>
+          <div class="kv"><span>Seller</span><b id="mSeller"></b></div>
+          <div class="kv"><span>Phone</span><b id="mPhone"></b></div>
+          <div class="kv"><span>Listed</span><b id="mDate"></b></div>
+        </div>
+        <button class="btn primary wide" id="mContact" style="margin-top:18px" type="button">📞 Contact seller</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================= SERVICE MODAL ============================= -->
+<div id="svcModal" class="modal hidden">
+  <div class="modal-card">
+    <button class="close-x" id="svcModalClose" type="button">✕</button>
+    <div class="modal-grid">
+      <div class="gallery">
+        <img class="main" id="sMain" alt="" />
+        <div class="thumbs" id="sThumbs"></div>
+      </div>
+      <div class="modal-info">
+        <div id="sCatPill" class="small muted"></div>
+        <h2 id="sTitle"></h2>
+        <div class="price" id="sPrice"></div>
+        <p id="sDesc" class="small" style="line-height:1.65;color:#c4d3ec;white-space:pre-wrap"></p>
+        <div style="margin-top:16px">
+          <div class="kv"><span>Delivery</span><b id="sMode"></b></div>
+          <div class="kv"><span>Duration</span><b id="sDuration"></b></div>
+          <div class="kv"><span>Service area</span><b id="sArea"></b></div>
+          <div class="kv"><span>Provider</span><b id="sProvider"></b></div>
+          <div class="kv"><span>Phone</span><b id="sPhone"></b></div>
+          <div class="kv"><span>Languages</span><b id="sLangs"></b></div>
+          <div class="kv"><span>Min notice</span><b id="sNotice"></b></div>
+        </div>
+        <div id="sTags" style="margin-top:12px"></div>
+        <div class="bk-form" id="bkForm">
+          <h4>📅 Request a booking</h4>
+          <label><span>Preferred date &amp; time *</span>
+            <input type="datetime-local" id="bkWhen" required />
+          </label>
+          <div class="row">
+            <label><span>Duration (min)</span>
+              <input type="number" id="bkDuration" min="15" max="1440" step="15" />
+            </label>
+            <label><span>Delivery</span>
+              <select id="bkMode">
+                <option value="">Use service default</option>
+                <option value="in_person">At provider</option>
+                <option value="at_client">At my location</option>
+                <option value="remote">Remote / online</option>
+              </select>
+            </label>
+          </div>
+          <label><span>Note to provider</span>
+            <textarea id="bkNote" rows="3" style="min-height:70px"
+              placeholder="Anything the provider should know…"></textarea>
+          </label>
+          <button class="btn primary wide" id="bkSubmit" type="button">Send booking request</button>
+        </div>
+        <button class="btn wide" id="sContact" style="margin-top:14px" type="button">📞 Call provider</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   CONFIGURATION — replace with your Supabase project values
+   ============================================================ */
+const SUPABASE_URL      = "https://jeqjzzlcmlrdnwkmpoxm.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplcWp6emxjbWxyZG53a21wb3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5MTcxNDksImV4cCI6MjEwNTQ5MzE0OX0.a-1ahOzgCNtaDpIIB1B310L-wj4QXeaizi4rR4Wh3-I";
+
+const MAX_IMAGES = 10;
+const BUCKET     = "item-images";
+const RENEWAL_MONTHS = 12;
+
+const configured = !SUPABASE_URL.includes("YOUR-PROJECT") && !SUPABASE_ANON_KEY.includes("YOUR-PUBLIC");
+const sb = configured
+  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+  : null;
+
+/* ---------------- helpers ---------------- */
+const $  = (s) => document.querySelector(s);
+const $$ = (s) => Array.from(document.querySelectorAll(s));
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c =>
+  ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+const toLocalInput = (d) => {
+  const p = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
+};
+const fmtDT = (v) => v ? new Date(v).toLocaleString([], {
+  weekday:"short", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"
+}) : "—";
+const fmtMoney = (amount, currency = "ZAR") =>
+  `${currency} ${Number(amount || 0).toLocaleString('en-ZA', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+const WEEKDAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+const MODE_LABEL = {
+  in_person: "At provider",
+  at_client: "At client's location",
+  remote:    "Remote / online",
+  flexible:  "Flexible"
+};
+const PRICING_LABEL = {
+  per_hour:"/ hour", per_session:"/ session", per_day:"/ day",
+  per_package:"/ package", starting_at:"starting at"
+};
+
+let toastTimer;
+function toast(message, type = "") {
+  const t = $("#toast");
+  t.className = "toast " + type;
+  t.textContent = message;
+  requestAnimationFrame(() => t.classList.add("show"));
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("show"), 4200);
+}
+function setMsg(text, type = "") {
+  const m = $("#authMsg");
+  m.textContent = text;
+  m.className = "msg " + type;
+}
+function busy(btn, on, label) {
+  if (!btn) return;
+  if (on) { btn.dataset.label = btn.innerHTML; btn.innerHTML = `<span class="spin"></span>${label}`; btn.disabled = true; }
+  else { btn.innerHTML = btn.dataset.label || label; btn.disabled = false; }
+}
+
+/* ---------------- state ---------------- */
+let currentUser    = null;
+let currentProfile = null;
+
+let allItems    = [];
+let allServices = [];
+let categories  = [];
+let myBookings  = { incoming: [], outgoing: [] };
+let bookingsTab = "incoming";
+
+let selectedFiles  = [];
+let previewUrls    = [];
+let svcFiles       = [];
+let svcPreviewUrls = [];
+
+let activeService = null;
+let activeItem    = null;
+let myListingsMode = "";
+
+/* ============================================================
+   AUTH — TAB SWITCHER
+   ============================================================ */
+$$(".tab").forEach(tab => tab.addEventListener("click", () => {
+  $$(".tab").forEach(t => t.classList.toggle("active", t === tab));
+  const isSignin = tab.dataset.tab === "signin";
+  $("#signinForm").classList.toggle("hidden", !isSignin);
+  $("#signupForm").classList.toggle("hidden", isSignin);
+  setMsg("");
+}));
+
+/* ============================================================
+   SIGN UP
+   ============================================================ */
+$("#signupForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!configured) return setMsg("Supabase is not configured. Add your URL and anon key in the script.", "err");
+
+  const f = new FormData(e.target);
+  const payload = {
+    full_name: (f.get("full_name") || "").trim(),
+    id_number: (f.get("id_number") || "").trim(),
+    phone:     (f.get("phone") || "").trim(),
+    country:   (f.get("country") || "").trim(),
+    city:      (f.get("city") || "").trim(),
+    role:      f.get("role") || "buyer"
+  };
+  const email    = (f.get("email") || "").trim();
+  const password = f.get("password") || "";
+
+  if (payload.full_name.split(" ").filter(Boolean).length < 2)
+    return setMsg("Please enter your full name (first and last name).", "err");
+  if (payload.id_number.length < 5)
+    return setMsg("Please enter a valid ID / passport number.", "err");
+  if (payload.phone.replace(/\D/g, "").length < 8)
+    return setMsg("Please enter a valid phone number.", "err");
+
+  const btn = $("#signupBtn");
+  busy(btn, true, "Creating account…");
+  setMsg("");
+
+  // 👇 Redirect target after email confirmation (GitHub Pages compatible)
+  const emailRedirectTo = window.location.origin + window.location.pathname;
+
+  const { data, error } = await sb.auth.signUp({
+    email,
+    password,
+    options: { data: payload, emailRedirectTo }
+  });
+  busy(btn, false, "Create my account");
+
+  if (error) {
+    const msg = (error.message || "").toLowerCase();
+    if (msg.includes("already registered") || msg.includes("already exists") || msg.includes("user already")) {
+      setMsg(
+        "This email already has an account. Please switch to the Sign in tab — if your membership expired you can renew from there.",
+        "err"
+      );
+      document.querySelector('.tab[data-tab="signin"]').click();
+      return;
+    }
+    if (msg.includes("profiles_phone_unique")) {
+      return setMsg("This phone number is already registered. Please sign in or use a different number.", "err");
+    }
+    if (msg.includes("profiles_id_number_unique")) {
+      return setMsg("This ID / Passport number is already registered. Please sign in or use a different ID.", "err");
+    }
+    return setMsg(error.message, "err");
+  }
+
+  if (!data.session) {
+    setMsg("✅ Account created! Check your email inbox to confirm your address, then sign in.", "ok");
+    toast("Confirmation email sent — verify your address.", "ok");
+    return;
+  }
+
+  setMsg("✅ Welcome to Dynamic Market Place!", "ok");
+  await enterApp(data.session.user);
+});
+
+/* ============================================================
+   SIGN IN
+   ============================================================ */
+$("#signinForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!configured) return setMsg("Supabase is not configured. Add your URL and anon key in the script.", "err");
+
+  const f = new FormData(e.target);
+  const btn = $("#signinBtn");
+  busy(btn, true, "Signing in…");
+  setMsg("");
+
+  const { data, error } = await sb.auth.signInWithPassword({
+    email: (f.get("email") || "").trim(),
+    password: f.get("password") || ""
+  });
+  busy(btn, false, "Sign in");
+  if (error) return setMsg(error.message, "err");
+
+  await enterApp(data.user);
+});
+
+/* ============================================================
+   SIGN OUT
+   ============================================================ */
+async function signOutNow() {
+  try { await sb.auth.signOut(); } catch (e) { /* ignore */ }
+  currentUser = null;
+  currentProfile = null;
+  allItems = []; allServices = []; myBookings = { incoming: [], outgoing: [] };
+  showAuth();
+  toast("Signed out.");
+}
+$("#signOutBtn").addEventListener("click", signOutNow);
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+(async function boot() {
+  if (!configured) {
+    setMsg("⚠️ Setup required: paste your Supabase URL and anon key into the script config.", "err");
+    return;
+  }
+
+  // Detect return from Yoco (either in search or hash for safety)
+  const urlSearch = new URLSearchParams(window.location.search);
+  const urlHash   = new URLSearchParams(window.location.hash.replace(/^#/, ''));
+  const paymentResult = urlSearch.get('payment') || urlHash.get('payment');
+  if (paymentResult) {
+    // Clean the URL so a refresh doesn't retrigger
+    const cleanUrl = window.location.origin + window.location.pathname;
+    window.history.replaceState(null, "", cleanUrl);
+    sessionStorage.setItem('paymentResult', paymentResult);
+  }
+
+  const { data } = await sb.auth.getSession();
+  if (data && data.session) await enterApp(data.session.user);
+
+  sb.auth.onAuthStateChange((event) => {
+    if (event === "SIGNED_OUT") {
+      currentUser = null;
+      currentProfile = null;
+      showAuth();
+    }
+  });
+})();
+
+function showAuth() {
+  $("#appTopbar").classList.add("hidden");
+  $("#appView").classList.add("hidden");
+  $("#authView").classList.remove("hidden");
+}
+
+/* ============================================================
+   ENTER APP — route to gate or marketplace based on subscription
+   ============================================================ */
+async function enterApp(user) {
+  currentUser = user;
+  $("#authView").classList.add("hidden");
+  $("#appView").classList.remove("hidden");
+
+  await loadProfile(user);
+  renderUserChip();
+
+  // 🔍 Check the subscription status
+  let status = 'none';
+  try {
+    const { data, error } = await sb.rpc('subscription_status');
+    if (error) {
+      console.warn('subscription_status RPC error:', error.message);
+      // Fallback: try has_paid_access
+      const { data: hasAccess } = await sb.rpc('has_paid_access');
+      status = hasAccess ? 'active' : 'none';
+    } else {
+      status = data || 'none';
+    }
+  } catch (e) {
+    console.warn('subscription check failed:', e.message);
+  }
+
+  // Handle payment redirect results (from Yoco)
+  const payResult = sessionStorage.getItem('paymentResult');
+  if (payResult === 'success' && status === 'pending') {
+    // Poll for a short while — webhook usually fires within a few seconds
+    status = await pollForActive(20000);
+  }
+  sessionStorage.removeItem('paymentResult');
+
+  routeByStatus(status);
+}
+
+async function pollForActive(timeoutMs = 20000) {
+  const start = Date.now();
+  while (Date.now() - start < timeoutMs) {
+    await new Promise(r => setTimeout(r, 1500));
+    try {
+      const { data } = await sb.rpc('subscription_status');
+      if (data === 'active') return 'active';
+    } catch (_) { /* keep polling */ }
+  }
+  return 'pending';
+}
+
+function routeByStatus(status) {
+  switch (status) {
+    case 'active':
+      showMarketplace();
+      break;
+    case 'expired':
+      showRenewalGate();
+      break;
+    case 'pending':
+      showPendingGate();
+      break;
+    case 'none':
+    default:
+      showPaymentGate();
+      break;
+  }
+}
+
+/* ============================================================
+   GATES
+   ============================================================ */
+function setGate(html) {
+  $("#appTopbar").classList.add("hidden");
+  $("#appContent").classList.add("hidden");
+  const g = $("#gateContainer");
+  g.classList.remove("hidden");
+  g.innerHTML = html;
+}
+function clearGate() {
+  const g = $("#gateContainer");
+  g.classList.add("hidden");
+  g.innerHTML = "";
+}
+
+function showPaymentGate() {
+  setGate(`
+    <div class="gate-wrap">
+      <div class="gate-card">
+        <div class="logo">D</div>
+        <h1>Welcome to Dynamic Market Place</h1>
+        <p class="lead">
+          Hi ${esc(currentProfile?.full_name || 'there')} — you're almost in.
+          Activate your 12-month marketplace membership to start buying and selling.
+        </p>
+        <div class="price-box">
+          <div class="kv"><span>Platform Access Fee (12 months)</span><b>R 225.00</b></div>
+          <div class="kv"><span>VAT (15%)</span><b>R 33.75</b></div>
+          <div class="kv"><span>Total Due Today</span><b class="total">R 258.75</b></div>
+        </div>
+        <button class="btn primary wide" id="payNowBtn"
+          style="padding:14px;font-size:16px;"
+          onclick="initiateYocoPayment('membership')">
+          Pay R 258.75 with Yoco
+        </button>
+        <p class="small muted" style="margin-top:16px;line-height:1.5">
+          Once-off payment for 12 months of marketplace access. Optional renewal.
+          All buyer–seller transactions are handled directly between the parties.
+        </p>
+        <button class="btn ghost" style="margin-top:14px" onclick="signOutNow()">Sign out</button>
+      </div>
+    </div>
+  `);
+}
+
+function showRenewalGate() {
+  setGate(`
+    <div class="gate-wrap">
+      <div class="gate-card">
+        <div class="logo" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">⏳</div>
+        <h1>Your Membership Has Expired</h1>
+        <p class="lead">
+          Hi ${esc(currentProfile?.full_name || 'there')} — your 12-month access to
+          Dynamic Market Place has ended. Renew today to keep buying and selling.
+        </p>
+        <div class="price-box">
+          <div class="kv"><span>Renewal Fee (12 months)</span><b>R 225.00</b></div>
+          <div class="kv"><span>VAT (15%)</span><b>R 33.75</b></div>
+          <div class="kv"><span>Total Due Today</span><b class="total">R 258.75</b></div>
+        </div>
+        <button class="btn primary wide" id="payNowBtn"
+          style="padding:14px;font-size:16px;"
+          onclick="initiateYocoPayment('renewal')">
+          Renew Now — R 258.75
+        </button>
+        <p class="small muted" style="margin-top:16px;line-height:1.5">
+          Your account, listings and history are preserved. Renewing simply restores
+          your access for another 12 months.
+        </p>
+        <button class="btn ghost" style="margin-top:14px" onclick="signOutNow()">Sign out</button>
+      </div>
+    </div>
+  `);
+}
+
+function showPendingGate() {
+  setGate(`
+    <div class="gate-wrap">
+      <div class="gate-card">
+        <div class="logo">⏱</div>
+        <h1>Payment Processing…</h1>
+        <p class="lead">
+          We're waiting for Yoco to confirm your payment. This usually takes a few seconds.
+          Click refresh once you've completed the payment on the Yoco page.
+        </p>
+        <button class="btn primary wide" onclick="location.reload()">Refresh status</button>
+        <button class="btn ghost" style="margin-top:14px" onclick="signOutNow()">Sign out</button>
+      </div>
+    </div>
+  `);
+}
+
+function showMarketplace() {
+  clearGate();
+  $("#appTopbar").classList.remove("hidden");
+  $("#appContent").classList.remove("hidden");
+
+  renderUserChip();
+  renderVerifyBanner();
+  renderOfferNotice();
+  switchPage("market");
+
+  // Load data in parallel
+  Promise.all([
+    loadCategories(),
+    loadItems(),
+    loadServices(),
+    loadBookings()
+  ]).catch(err => console.warn('initial load:', err.message));
+}
+
+/* ============================================================
+   YOCO PAYMENT
+   ============================================================ */
+async function initiateYocoPayment(paymentType = 'membership') {
+  if (!currentUser) return toast("Please sign in first.", "err");
+
+  const btn = $("#payNowBtn");
+  busy(btn, true, "Redirecting to Yoco…");
+
+  try {
+    const { data, error } = await sb.functions.invoke('create-yoco-checkout', {
+      body: { payment_type: paymentType }
+    });
+
+    if (error) throw new Error(error.message);
+    if (data?.error) throw new Error(data.error);
+    if (!data?.redirectUrl) throw new Error("Yoco did not return a redirect URL.");
+
+    window.location.href = data.redirectUrl;
+  } catch (err) {
+    toast(err.message || "Could not start payment.", "err");
+    busy(btn, false, "Pay R 258.75 with Yoco");
+  }
+}
+
+/* ============================================================
+   PROFILE
+   ============================================================ */
+async function loadProfile(user) {
+  let { data } = await sb.from("profiles").select("*").eq("id", user.id).maybeSingle();
+
+  if (!data) {
+    const m = user.user_metadata || {};
+    const { data: created } = await sb.from("profiles").insert({
+      id: user.id,
+      full_name: m.full_name || user.email?.split("@")[0] || "New user",
+      id_number: m.id_number || "",
+      phone:     m.phone || "",
+      email:     user.email,
+      role:      m.role || "buyer",
+      country:   m.country || "",
+      city:      m.city || ""
+    }).select().maybeSingle();
+    data = created;
+  }
+  currentProfile = data;
+}
+
+function renderUserChip() {
+  const name = currentProfile?.full_name || currentUser?.email || "User";
+  $("#userName").textContent = name;
+  $("#userRole").textContent =
+    (currentProfile?.role || "buyer").toUpperCase() +
+    (currentProfile?.verified ? " · ✔ verified" : "");
+  $("#avatarInitial").textContent = name.trim().charAt(0).toUpperCase() || "?";
+}
+
+function renderVerifyBanner() {
+  const b = $("#verifyBanner");
+  const p = currentProfile;
+  if (!p) {
+    b.className = "banner err";
+    b.textContent = "We could not load your profile. Please sign out and sign in again.";
+    return;
+  }
+  if (p.verified) {
+    b.className = "banner ok";
+    b.innerHTML = "✅ <b>Verified account.</b> You can trade and publish in-person services with confidence.";
+    return;
+  }
+  const missing = [];
+  if (!p.full_name) missing.push("full name");
+  if (!p.id_number) missing.push("ID number");
+  if (!p.phone)     missing.push("phone number");
+  if (!p.email)     missing.push("email");
+
+  b.className = "banner";
+  b.innerHTML = missing.length
+    ? `⚠️ <b>Profile incomplete:</b> missing ${missing.join(", ")}. Complete your details so buyers and clients can trust you.`
+    : `⏳ <b>Verification pending.</b> Your details are on file. In-person services can only be published once an admin verifies your account. Remote services can be published immediately.`;
+}
+
+function renderOfferNotice() {
+  const n = $("#offerNotice");
+  if (!currentProfile) { n.className = "banner hidden"; return; }
+  if (currentProfile.verified) {
+    n.className = "banner ok";
+    n.innerHTML = "✅ You're verified — you can publish both in-person and remote services.";
+  } else {
+    n.className = "banner";
+    n.innerHTML = "🔒 <b>Unverified account.</b> You may publish <b>remote / online</b> services now. In-person services unlock after admin verification.";
+  }
+}
+
+function renderProfilePage() {
+  const p = currentProfile || {};
+  const mask = (v) => v ? String(v).replace(/.(?=.{3})/g, "•") : "—";
+  const rows = [
+    ["Full name", p.full_name || "—"],
+    ["ID / Passport number", mask(p.id_number)],
+    ["Email address", p.email || currentUser?.email || "—"],
+    ["Phone number", p.phone || "—"],
+    ["Country", p.country || "—"],
+    ["City / Town", p.city || "—"],
+    ["Account type", (p.role || "buyer").toUpperCase()],
+    ["Verification status", p.verified ? "<span class='tick'>✔ Verified</span>" : "⏳ Pending review"],
+    ["Member since", p.created_at ? new Date(p.created_at).toLocaleDateString() : "—"]
+  ];
+  $("#profileDetails").innerHTML = rows.map(([k, v]) =>
+    `<div class="kv"><span>${esc(k)}</span><b>${k === "Verification status" ? v : esc(v)}</b></div>`
+  ).join("");
+}
+
+$("#refreshProfileBtn").addEventListener("click", async () => {
+  await loadProfile(currentUser);
+  renderUserChip(); renderVerifyBanner(); renderOfferNotice(); renderProfilePage();
+  toast("Profile refreshed.", "ok");
+});
+
+$("#myListingsBtn").addEventListener("click", () => {
+  const box = $("#myListings");
+  if (myListingsMode === "items") { box.innerHTML = ""; myListingsMode = ""; return; }
+  const mine = allItems.filter(i => i.seller_id === currentUser.id);
+  box.innerHTML = mine.length ? mine.map(itemCardHTML).join("")
+    : `<p class="empty">You have not listed any items yet.</p>`;
+  myListingsMode = "items";
+});
+
+$("#myServicesBtn").addEventListener("click", () => {
+  const box = $("#myListings");
+  if (myListingsMode === "services") { box.innerHTML = ""; myListingsMode = ""; return; }
+  const mine = allServices.filter(s => s.provider_id === currentUser.id);
+  box.innerHTML = mine.length ? mine.map(serviceCardHTML).join("")
+    : `<p class="empty">You have not published any services yet.</p>`;
+  myListingsMode = "services";
+});
+
+/* ============================================================
+   CATEGORIES
+   ============================================================ */
+async function loadCategories() {
+  const { data, error } = await sb.from("service_categories")
+    .select("slug,label,icon,sort_order")
+    .eq("active", true)
+    .order("sort_order");
+
+  if (error) { console.warn("categories:", error.message); return; }
+  categories = data || [];
+
+  const sel = $("#svcCategory");
+  sel.innerHTML = `<option value="">All categories</option>` +
+    categories.map(c => `<option value="${esc(c.slug)}">${esc(c.icon)} ${esc(c.label)}</option>`).join("");
+
+  const formSel = $("#svcFormCategory");
+  formSel.innerHTML = `<option value="">Select a category…</option>` +
+    categories.map(c => `<option value="${esc(c.slug)}">${esc(c.icon)} ${esc(c.label)}</option>`).join("");
+}
+
+/* ============================================================
+   ITEMS
+   ============================================================ */
+async function loadItems() {
+  const grid = $("#grid");
+  grid.innerHTML = `<p class="empty">Loading listings…</p>`;
+
+  const { data, error } = await sb
+    .from("items")
+    .select("id,title,description,price,currency,category,location,images,status,created_at,seller_id,seller:profiles!seller_id(full_name,phone,verified,city)")
+    .order("created_at", { ascending: false })
+    .limit(120);
+
+  if (error) {
+    grid.innerHTML = `<p class="empty">Could not load listings: ${esc(error.message)}</p>`;
+    return;
+  }
+  allItems = data || [];
+  renderGrid(allItems);
+}
+
+function itemCardHTML(it) {
+  const imgs = Array.isArray(it.images) ? it.images : [];
+  const cover = imgs[0];
+  const seller = it.seller || {};
+  return `
+    <article class="card" data-kind="item" data-id="${esc(it.id)}">
+      <div class="thumb">
+        ${cover ? `<img src="${esc(cover)}" alt="${esc(it.title)}" loading="lazy">` : `<div class="noimg">No picture</div>`}
+        ${imgs.length > 1 ? `<span class="badge">${imgs.length} photos</span>` : ""}
+      </div>
+      <div class="card-body">
+        <h3>${esc(it.title)}</h3>
+        <div class="price">${esc(it.currency || "ZAR")} ${Number(it.price || 0).toLocaleString()}</div>
+        <p class="muted small" style="margin:0">${esc(it.category || "General")} · ${esc(it.location || "—")}</p>
+        <p class="muted small" style="margin:0">
+          ${esc(seller.full_name || "Unknown seller")}
+          ${seller.verified ? `<span class="tick">✔</span>` : ""}
+        </p>
+      </div>
+    </article>`;
+}
+
+function renderGrid(items) {
+  const grid = $("#grid");
+  if (!items.length) { grid.innerHTML = `<p class="empty">No listings found. Be the first to sell something!</p>`; return; }
+  grid.innerHTML = items.map(itemCardHTML).join("");
+}
+
+$("#searchInput").addEventListener("input", (e) => {
+  const q = e.target.value.toLowerCase().trim();
+  if (!q) return renderGrid(allItems);
+  renderGrid(allItems.filter(i =>
+    [i.title, i.description, i.category, i.location, i.seller?.full_name]
+      .filter(Boolean).some(v => String(v).toLowerCase().includes(q))
+  ));
+});
+
+/* ============================================================
+   SERVICES
+   ============================================================ */
+async function loadServices() {
+  const grid = $("#svcGrid");
+  grid.innerHTML = `<p class="empty">Loading services…</p>`;
+
+  const { data, error } = await sb.rpc("search_services", {
+    q: null, category: null, mode: null, area: null,
+    max_price: null, verified_only: false, lim: 200, off: 0
+  });
+
+  if (error) {
+    grid.innerHTML = `<p class="empty">Could not load services: ${esc(error.message)}</p>`;
+    return;
+  }
+  allServices = data || [];
+  renderServiceGrid(allServices);
+}
+
+function serviceCardHTML(s) {
+  const imgs = Array.isArray(s.images) ? s.images : [];
+  const cover = imgs[0];
+  const pricing = PRICING_LABEL[s.pricing_type] || "";
+  return `
+    <article class="card" data-kind="service" data-id="${esc(s.id)}">
+      <div class="thumb">
+        ${s.featured ? `<span class="badge top">★ Featured</span>` : ""}
+        ${cover ? `<img src="${esc(cover)}" alt="${esc(s.title)}" loading="lazy">` : `<div class="noimg">No picture</div>`}
+        <span class="badge">${esc(s.category_icon || "")} ${esc(s.category_label || "")}</span>
+      </div>
+      <div class="card-body">
+        <h3>${esc(s.title)}</h3>
+        <div class="price">${esc(s.currency || "ZAR")} ${Number(s.price || 0).toLocaleString()}
+          <span class="small muted">${esc(pricing)}</span>
+        </div>
+        <p class="muted small" style="margin:0">
+          ${esc(MODE_LABEL[s.delivery_mode] || s.delivery_mode)}
+          ${s.duration_minutes ? `· ${s.duration_minutes} min` : ""}
+        </p>
+        <p class="muted small" style="margin:0">
+          ${esc(s.provider_name || "Provider")}
+          ${s.provider_verified ? `<span class="tick">✔</span>` : ""}
+          ${s.service_area ? `· ${esc(s.service_area)}` : ""}
+        </p>
+      </div>
+    </article>`;
+}
+
+function renderServiceGrid(items) {
+  const grid = $("#svcGrid");
+  if (!items.length) { grid.innerHTML = `<p class="empty">No services match your filters yet.</p>`; return; }
+  grid.innerHTML = items.map(serviceCardHTML).join("");
+}
+
+async function applyServiceFilters() {
+  const grid = $("#svcGrid");
+  grid.innerHTML = `<p class="empty">Searching…</p>`;
+
+  const params = {
+    q:             $("#svcQ").value.trim() || null,
+    category:      $("#svcCategory").value || null,
+    mode:          $("#svcMode").value || null,
+    area:          $("#svcArea").value.trim() || null,
+    max_price:     $("#svcMaxPrice").value ? Number($("#svcMaxPrice").value) : null,
+    verified_only: $("#svcVerifiedOnly").checked,
+    lim: 200, off: 0
+  };
+  const { data, error } = await sb.rpc("search_services", params);
+  if (error) { grid.innerHTML = `<p class="empty">Search failed: ${esc(error.message)}</p>`; return; }
+  allServices = data || [];
+  renderServiceGrid(allServices);
+}
+
+$("#svcApply").addEventListener("click", applyServiceFilters);
+$("#svcQ").addEventListener("keydown", (e) => { if (e.key === "Enter") applyServiceFilters(); });
+$("#svcClear").addEventListener("click", () => {
+  $("#svcQ").value = ""; $("#svcCategory").value = ""; $("#svcMode").value = "";
+  $("#svcArea").value = ""; $("#svcMaxPrice").value = ""; $("#svcVerifiedOnly").checked = false;
+  renderServiceGrid(allServices);
+});
+
+/* ============================================================
+   ITEM MODAL
+   ============================================================ */
+function openItemModal(it) {
+  activeItem = it;
+  const imgs = Array.isArray(it.images) && it.images.length ? it.images : [];
+  const seller = it.seller || {};
+
+  $("#mTitle").textContent = it.title;
+  $("#mPrice").textContent = fmtMoney(it.price, it.currency || "ZAR");
+  $("#mDesc").textContent = it.description || "No description provided.";
+  $("#mCat").textContent = it.category || "General";
+  $("#mLoc").textContent = it.location || "—";
+  $("#mSeller").innerHTML = esc(seller.full_name || "Unknown") +
+    (seller.verified ? ` <span class="tick">✔ verified</span>` : "");
+  $("#mPhone").textContent = seller.phone || "—";
+  $("#mDate").textContent = it.created_at ? new Date(it.created_at).toLocaleString() : "—";
+
+  const main = $("#mMain"), thumbs = $("#mThumbs");
+  if (imgs.length) {
+    main.src = imgs[0]; main.style.display = "block";
+    thumbs.innerHTML = imgs.map((u, i) =>
+      `<img src="${esc(u)}" data-src="${esc(u)}" class="${i === 0 ? "active" : ""}" alt="">`).join("");
+    thumbs.querySelectorAll("img").forEach(t => t.addEventListener("click", () => {
+      main.src = t.dataset.src;
+      thumbs.querySelectorAll("img").forEach(x => x.classList.toggle("active", x === t));
+    }));
+  } else {
+    main.removeAttribute("src"); main.style.display = "none"; thumbs.innerHTML = "";
+  }
+
+  const phone = seller.phone || "";
+  $("#mContact").onclick = () => {
+    if (!phone) return toast("This seller has no phone number on file.", "err");
+    window.location.href = "tel:" + phone.replace(/\s+/g, "");
+  };
+
+  $("#modal").classList.remove("hidden");
+}
+
+/* ============================================================
+   SERVICE MODAL
+   ============================================================ */
+function openServiceModal(s) {
+  activeService = s;
+  const imgs = Array.isArray(s.images) && s.images.length ? s.images : [];
+
+  $("#sCatPill").textContent = `${s.category_icon || ""} ${s.category_label || ""}`.trim();
+  $("#sTitle").textContent = s.title;
+  $("#sPrice").innerHTML = `${esc(fmtMoney(s.price, s.currency || "ZAR"))}
+    <span class="small muted">${esc(PRICING_LABEL[s.pricing_type] || "")}</span>`;
+  $("#sDesc").textContent = s.description || "No description provided.";
+  $("#sMode").textContent = MODE_LABEL[s.delivery_mode] || s.delivery_mode || "—";
+  $("#sDuration").textContent = s.duration_minutes ? `${s.duration_minutes} minutes` : "—";
+  $("#sArea").textContent = s.service_area || "—";
+  $("#sProvider").innerHTML = esc(s.provider_name || "Provider") +
+    (s.provider_verified ? ` <span class="tick">✔ verified</span>` : "");
+  $("#sPhone").textContent = s.provider_phone || "—";
+  $("#sLangs").textContent = (s.languages || []).join(", ") || "—";
+  $("#sNotice").textContent = `${s.min_notice_hours ?? 24} hours`;
+
+  $("#sTags").innerHTML = (s.tags || []).slice(0, 12)
+    .map(t => `<span class="tag">${esc(t)}</span>`).join("");
+
+  const main = $("#sMain"), thumbs = $("#sThumbs");
+  if (imgs.length) {
+    main.src = imgs[0]; main.style.display = "block";
+    thumbs.innerHTML = imgs.map((u, i) =>
+      `<img src="${esc(u)}" data-src="${esc(u)}" class="${i === 0 ? "active" : ""}" alt="">`).join("");
+    thumbs.querySelectorAll("img").forEach(t => t.addEventListener("click", () => {
+      main.src = t.dataset.src;
+      thumbs.querySelectorAll("img").forEach(x => x.classList.toggle("active", x === t));
+    }));
+  } else {
+    main.removeAttribute("src"); main.style.display = "none"; thumbs.innerHTML = "";
+  }
+
+  const when = new Date(Date.now() + Math.max(1, (s.min_notice_hours ?? 24)) * 3600 * 1000);
+  $("#bkWhen").value = toLocalInput(when);
+  $("#bkDuration").value = s.duration_minutes || 60;
+  $("#bkMode").value = "";
+  $("#bkNote").value = "";
+
+  const isOwn = s.provider_id === currentUser.id;
+  $("#bkForm").classList.toggle("hidden", isOwn);
+
+  const phone = s.provider_phone || "";
+  $("#sContact").onclick = () => {
+    if (!phone) return toast("No phone number on file for this provider.", "err");
+    window.location.href = "tel:" + phone.replace(/\s+/g, "");
+  };
+
+  $("#svcModal").classList.remove("hidden");
+}
+
+$("#svcModalClose").addEventListener("click", () => $("#svcModal").classList.add("hidden"));
+$("#svcModal").addEventListener("click", (e) => { if (e.target.id === "svcModal") $("#svcModal").classList.add("hidden"); });
+$("#modalClose").addEventListener("click", () => $("#modal").classList.add("hidden"));
+$("#modal").addEventListener("click", (e) => { if (e.target.id === "modal") $("#modal").classList.add("hidden"); });
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    $("#modal").classList.add("hidden");
+    $("#svcModal").classList.add("hidden");
+  }
+});
+
+/* ============================================================
+   BOOKING REQUEST
+   ============================================================ */
+$("#bkSubmit").addEventListener("click", async () => {
+  if (!activeService) return;
+  const when = $("#bkWhen").value;
+  if (!when) return toast("Please choose a date and time.", "err");
+
+  const btn = $("#bkSubmit");
+  busy(btn, true, "Sending request…");
+
+  const { error } = await sb.from("service_bookings").insert({
+    service_id:       activeService.id,
+    customer_id:      currentUser.id,
+    provider_id:      activeService.provider_id,
+    scheduled_at:     new Date(when).toISOString(),
+    duration_minutes: $("#bkDuration").value ? Number($("#bkDuration").value) : activeService.duration_minutes,
+    delivery_mode:    $("#bkMode").value || activeService.delivery_mode,
+    note:             $("#bkNote").value.trim(),
+    quoted_price:     activeService.price,
+    currency:         activeService.currency
+  });
+
+  busy(btn, false, "Send booking request");
+  if (error) return toast("Booking failed: " + error.message, "err");
+
+  toast("✅ Booking request sent!", "ok");
+  $("#svcModal").classList.add("hidden");
+  await loadBookings();
+  switchPage("bookings");
+});
+
+/* ============================================================
+   AVAILABILITY SLOTS
+   ============================================================ */
+function addSlot(weekday = 1, start = "09:00", end = "17:00") {
+  const wrap = $("#slots");
+  const row = document.createElement("div");
+  row.className = "slot";
+  row.innerHTML = `
+    <select class="slot-day">
+      ${WEEKDAYS.map((d, i) => `<option value="${i}" ${i === weekday ? "selected" : ""}>${d}</option>`).join("")}
+    </select>
+    <input type="time" class="slot-start" value="${start}">
+    <input type="time" class="slot-end" value="${end}">
+    <button type="button" class="slot-x" title="Remove">✕</button>
+  `;
+  row.querySelector(".slot-x").addEventListener("click", () => row.remove());
+  wrap.appendChild(row);
+}
+$("#addSlot").addEventListener("click", () => addSlot());
+
+/* ============================================================
+   IMAGE PICKERS
+   ============================================================ */
+function bindImagePicker({ dropZone, input, filesRef, renderFn }) {
+  dropZone.addEventListener("click", () => input.click());
+  ["dragenter","dragover"].forEach(ev => dropZone.addEventListener(ev, (e) => {
+    e.preventDefault(); dropZone.style.borderColor = "var(--accent)";
+  }));
+  ["dragleave","drop"].forEach(ev => dropZone.addEventListener(ev, (e) => {
+    e.preventDefault(); dropZone.style.borderColor = "";
+  }));
+  dropZone.addEventListener("drop", (e) => filesRef.add(e.dataTransfer.files));
+  input.addEventListener("change", (e) => { filesRef.add(e.target.files); e.target.value = ""; });
+}
+
+const itemFiles = {
+  list: [],
+  add(fileList) {
+    const incoming = Array.from(fileList || []).filter(f => f.type.startsWith("image/"));
+    if (!incoming.length) return;
+    const room = MAX_IMAGES - this.list.length;
+    if (room <= 0) return toast(`Maximum of ${MAX_IMAGES} pictures reached.`, "err");
+    if (incoming.length > room) toast(`Only ${room} more picture(s) allowed — extras skipped.`, "err");
+    this.list = this.list.concat(incoming.slice(0, room));
+    renderItemPreviews();
+  }
+};
+
+function renderItemPreviews() {
+  const box = $("#previews");
+  previewUrls.forEach(u => URL.revokeObjectURL(u));
+  previewUrls = [];
+  box.innerHTML = itemFiles.list.map((file, i) => {
+    const url = URL.createObjectURL(file);
+    previewUrls.push(url);
+    return `<div class="pv"><img src="${url}" alt=""><button type="button" data-i="${i}">✕</button></div>`;
+  }).join("");
+  box.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    itemFiles.list.splice(Number(b.dataset.i), 1);
+    renderItemPreviews();
+  }));
+  $("#imgCounter").textContent = `${itemFiles.list.length} / ${MAX_IMAGES} pictures selected`;
+}
+
+const svcFilesObj = {
+  list: [],
+  add(fileList) {
+    const incoming = Array.from(fileList || []).filter(f => f.type.startsWith("image/"));
+    if (!incoming.length) return;
+    const room = MAX_IMAGES - this.list.length;
+    if (room <= 0) return toast(`Maximum of ${MAX_IMAGES} pictures reached.`, "err");
+    if (incoming.length > room) toast(`Only ${room} more picture(s) allowed — extras skipped.`, "err");
+    this.list = this.list.concat(incoming.slice(0, room));
+    renderSvcPreviews();
+  }
+};
+
+function renderSvcPreviews() {
+  const box = $("#svcPreviews");
+  svcPreviewUrls.forEach(u => URL.revokeObjectURL(u));
+  svcPreviewUrls = [];
+  box.innerHTML = svcFilesObj.list.map((file, i) => {
+    const url = URL.createObjectURL(file);
+    svcPreviewUrls.push(url);
+    return `<div class="pv"><img src="${url}" alt=""><button type="button" data-i="${i}">✕</button></div>`;
+  }).join("");
+  box.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+    svcFilesObj.list.splice(Number(b.dataset.i), 1);
+    renderSvcPreviews();
+  }));
+  $("#svcImgCounter").textContent = `${svcFilesObj.list.length} / ${MAX_IMAGES} pictures selected`;
+}
+
+bindImagePicker({
+  dropZone: $("#dropZone"),
+  input: $("#itemImages"),
+  filesRef: itemFiles
+});
+bindImagePicker({
+  dropZone: $("#svcDropZone"),
+  input: $("#svcImages"),
+  filesRef: svcFilesObj
+});
+
+/* ============================================================
+   UPLOAD HELPER
+   ============================================================ */
+async function uploadImages(files, subfolder = "") {
+  const urls = [];
+  const prefix = subfolder ? `${subfolder}/` : "";
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+    const clean = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const path = `${currentUser.id}/${prefix}${Date.now()}-${i}-${clean}`;
+    const { error: upErr } = await sb.storage.from(BUCKET)
+      .upload(path, file, { cacheControl: "3600", upsert: false });
+    if (upErr) throw new Error("Image upload failed: " + upErr.message);
+    const { data: pub } = sb.storage.from(BUCKET).getPublicUrl(path);
+    urls.push(pub.publicUrl);
+  }
+  return urls;
+}
+
+/* ============================================================
+   PUBLISH ITEM
+   ============================================================ */
+$("#itemForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!currentUser) return toast("Please sign in first.", "err");
+  if (!itemFiles.list.length) return toast("Please add at least one picture of your item.", "err");
+
+  const f = new FormData(e.target);
+  const btn = $("#publishBtn");
+  busy(btn, true, "Uploading…");
+
+  try {
+    const urls = await uploadImages(itemFiles.list);
+
+    btn.innerHTML = `<span class="spin"></span>Saving listing…`;
+    const { error: insErr } = await sb.from("items").insert({
+      seller_id:   currentUser.id,
+      title:       (f.get("title") || "").trim(),
+      description: (f.get("description") || "").trim(),
+      price:       Number(f.get("price") || 0),
+      currency:    f.get("currency") || "ZAR",
+      category:    (f.get("category") || "").trim() || "General",
+      location:    (f.get("location") || "").trim(),
+      images:      urls
+    });
+    if (insErr) throw new Error(insErr.message);
+
+    toast("✅ Listing published!", "ok");
+    e.target.reset();
+    itemFiles.list = []; renderItemPreviews();
+    await loadItems();
+    switchPage("market");
+  } catch (err) {
+    toast(err.message || "Something went wrong.", "err");
+  } finally {
+    busy(btn, false, "Publish listing");
+  }
+});
+
+$("#resetBtn").addEventListener("click", () => {
+  itemFiles.list = []; renderItemPreviews();
+  setTimeout(() => { $("#itemForm").reset(); renderItemPreviews(); }, 0);
+});
+
+/* ============================================================
+   PUBLISH SERVICE
+   ============================================================ */
+$("#serviceForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  if (!currentUser) return toast("Please sign in first.", "err");
+  if (!svcFilesObj.list.length) return toast("Please add at least one picture of your service.", "err");
+
+  const f = new FormData(e.target);
+  const mode = f.get("delivery_mode");
+  const inPerson = ["in_person","at_client","flexible"].includes(mode);
+
+  if (inPerson && !currentProfile?.verified) {
+    return toast("In-person services require a verified account. Switch to remote or wait for verification.", "err");
+  }
+
+  const btn = $("#svcPublishBtn");
+  busy(btn, true, "Uploading…");
+
+  try {
+    const urls = await uploadImages(svcFilesObj.list, "services");
+
+    btn.innerHTML = `<span class="spin"></span>Saving service…`;
+    const parseList = (v) => String(v || "").split(",").map(x => x.trim()).filter(Boolean);
+
+    const { data: created, error: insErr } = await sb.from("services").insert({
+      provider_id:        currentUser.id,
+      category_slug:      f.get("category_slug"),
+      title:              (f.get("title") || "").trim(),
+      description:        (f.get("description") || "").trim(),
+      price:              Number(f.get("price") || 0),
+      currency:           f.get("currency") || "ZAR",
+      pricing_type:       f.get("pricing_type") || "per_session",
+      delivery_mode:      mode,
+      duration_minutes:   f.get("duration_minutes") ? Number(f.get("duration_minutes")) : null,
+      service_area:       (f.get("service_area") || "").trim(),
+      min_notice_hours:   Number(f.get("min_notice_hours") || 24),
+      cancellation_hours: Number(f.get("cancellation_hours") || 24),
+      languages:          parseList(f.get("languages")),
+      tags:               parseList(f.get("tags")).slice(0, 12),
+      images:             urls,
+      status:             "active"
+    }).select().single();
+    if (insErr) throw new Error(insErr.message);
+
+    const slotRows = $$("#slots .slot").map(row => ({
+      service_id: created.id,
+      weekday:    Number(row.querySelector(".slot-day").value),
+      start_time: row.querySelector(".slot-start").value,
+      end_time:   row.querySelector(".slot-end").value
+    })).filter(s => s.start_time && s.end_time && s.end_time > s.start_time);
+
+    if (slotRows.length) {
+      const { error: avErr } = await sb.from("service_availability").insert(slotRows);
+      if (avErr) console.warn("availability:", avErr.message);
+    }
+
+    toast("✅ Service published!", "ok");
+    e.target.reset();
+    svcFilesObj.list = []; renderSvcPreviews();
+    $("#slots").innerHTML = ""; addSlot();
+    await loadServices();
+    switchPage("services");
+  } catch (err) {
+    toast(err.message || "Something went wrong.", "err");
+  } finally {
+    busy(btn, false, "Publish service");
+  }
+});
+
+$("#svcResetBtn").addEventListener("click", () => {
+  svcFilesObj.list = []; renderSvcPreviews();
+  setTimeout(() => {
+    $("#serviceForm").reset();
+    $("#slots").innerHTML = ""; addSlot();
+    renderSvcPreviews();
+  }, 0);
+});
+
+/* ============================================================
+   BOOKINGS
+   ============================================================ */
+async function loadBookings() {
+  const { data, error } = await sb.from("service_bookings")
+    .select(`
+      id, service_id, customer_id, provider_id, scheduled_at, duration_minutes,
+      delivery_mode, location_note, note, quoted_price, currency, status,
+      provider_response, created_at,
+      service:services!service_id(id,title,images,category_slug),
+      customer:profiles!customer_id(full_name,phone),
+      provider:profiles!provider_id(full_name,phone)
+    `)
+    .order("scheduled_at", { ascending: true })
+    .limit(200);
+
+  if (error) {
+    $("#bkList").innerHTML = `<p class="empty">Could not load bookings: ${esc(error.message)}</p>`;
+    return;
+  }
+
+  const uid = currentUser.id;
+  myBookings.incoming = (data || []).filter(b => b.provider_id === uid);
+  myBookings.outgoing = (data || []).filter(b => b.customer_id === uid);
+
+  const pending = myBookings.incoming.filter(b => b.status === "requested").length;
+  $("#bkBadge").innerHTML = pending
+    ? ` <span class="tag" style="background:#4a3a12;color:#ffd88a;border-color:#6a551b">${pending}</span>`
+    : "";
+
+  renderBookings();
+}
+
+function bookingCardHTML(b, role) {
+  const cover = Array.isArray(b.service?.images) && b.service.images[0];
+  const other = role === "incoming" ? b.customer : b.provider;
+  const otherLabel = role === "incoming" ? "Customer" : "Provider";
+
+  const actions = [];
+  if (role === "incoming") {
+    if (b.status === "requested") {
+      actions.push(`<button class="btn ok sm" data-act="accepted"  data-id="${b.id}">Accept</button>`);
+      actions.push(`<button class="btn danger sm" data-act="declined" data-id="${b.id}">Decline</button>`);
+    }
+    if (b.status === "accepted") {
+      actions.push(`<button class="btn primary sm" data-act="completed" data-id="${b.id}">Mark completed</button>`);
+      actions.push(`<button class="btn sm" data-act="no_show" data-id="${b.id}">No show</button>`);
+    }
+  } else {
+    if (["requested","accepted"].includes(b.status)) {
+      actions.push(`<button class="btn danger sm" data-act="cancelled" data-id="${b.id}">Cancel request</button>`);
+    }
+  }
+
+  return `
+    <div class="bk">
+      <div class="thumb" style="width:74px;height:74px;border-radius:10px;overflow:hidden;flex:0 0 auto">
+        ${cover ? `<img src="${esc(cover)}" style="width:100%;height:100%;object-fit:cover" alt="">`
+                : `<div class="noimg" style="font-size:11px">No image</div>`}
+      </div>
+      <div>
+        <div style="font-weight:700;font-size:15px">${esc(b.service?.title || "Service")}</div>
+        <div class="when">📅 ${esc(fmtDT(b.scheduled_at))}
+          ${b.duration_minutes ? ` · ${b.duration_minutes} min` : ""}
+          ${b.delivery_mode ? ` · ${esc(MODE_LABEL[b.delivery_mode] || b.delivery_mode)}` : ""}
+        </div>
+        <div class="who">${otherLabel}: ${esc(other?.full_name || "—")}
+          ${other?.phone ? ` · ${esc(other.phone)}` : ""}
+        </div>
+        ${b.note ? `<div class="small muted" style="margin-top:6px">📝 ${esc(b.note)}</div>` : ""}
+        ${b.provider_response ? `<div class="small muted" style="margin-top:4px">↩ ${esc(b.provider_response)}</div>` : ""}
+        <div style="margin-top:8px"><span class="pill ${esc(b.status)}">${esc(b.status)}</span>
+          ${b.quoted_price ? `<span class="small muted" style="margin-left:8px">${esc(fmtMoney(b.quoted_price, b.currency || "ZAR"))}</span>` : ""}
+        </div>
+      </div>
+      <div class="actions">${actions.join("")}</div>
+    </div>`;
+}
+
+function renderBookings() {
+  const list = myBookings[bookingsTab] || [];
+  const box = $("#bkList");
+  if (!list.length) {
+    box.innerHTML = `<p class="empty">${
+      bookingsTab === "incoming"
+        ? "No booking requests received yet."
+        : "You haven't requested any services yet."
+    }</p>`;
+    return;
+  }
+  box.innerHTML = list.map(b => bookingCardHTML(b, bookingsTab)).join("");
+}
+
+$$(".section-tab").forEach(t => t.addEventListener("click", () => {
+  $$(".section-tab").forEach(x => x.classList.toggle("active", x === t));
+  bookingsTab = t.dataset.bk;
+  renderBookings();
+}));
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return;
+  const id = btn.dataset.id;
+  const act = btn.dataset.act;
+  busy(btn, true, "…");
+  const { error } = await sb.from("service_bookings").update({ status: act }).eq("id", id);
+  if (error) { toast("Update failed: " + error.message, "err"); busy(btn, false, act); return; }
+  toast("Booking " + act + ".", "ok");
+  await loadBookings();
+});
+
+/* ============================================================
+   GLOBAL CARD CLICK
+   ============================================================ */
+document.addEventListener("click", (e) => {
+  const card = e.target.closest(".card");
+  if (!card) return;
+  const kind = card.dataset.kind;
+  const id   = card.dataset.id;
+
+  if (kind === "item") {
+    const it = allItems.find(i => i.id === id);
+    if (it) openItemModal(it);
+  } else if (kind === "service") {
+    const s = allServices.find(x => x.id === id);
+    if (s) openServiceModal(s);
+  }
+});
+
+/* ============================================================
+   PAGE ROUTER
+   ============================================================ */
+function switchPage(name) {
+  $$(".page").forEach(p => p.classList.toggle("hidden", p.id !== "page-" + name));
+  $$(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.page === name));
+  if (name === "profile")  renderProfilePage();
+  if (name === "bookings") loadBookings();
+  if (name === "offer")    renderOfferNotice();
+}
+$$(".tab-btn").forEach(b => b.addEventListener("click", () => switchPage(b.dataset.page)));
+
+/* ============================================================
+   INITIALISE
+   ============================================================ */
+addSlot(1, "09:00", "17:00");
+addSlot(6, "10:00", "14:00");
+</script>
+
+<!-- ============================================================
+     GitHub Pages SPA REDIRECT HANDLER
+     This catches the redirect from /404.html and restores the URL
+     so Supabase can read the confirmation token from the query.
+     ============================================================ -->
+<script>
+  (function(l) {
+    if (l.search[1] === '/' ) {
+      var decoded = l.search.slice(1).split('&').map(function(s) {
+        return s.replace(/~and~/g, '&');
+      }).join('?');
+      window.history.replaceState(null, null,
+        l.pathname.slice(0, -1) + decoded + l.hash
+      );
+    }
+  }(window.location));
+</script>
+</body>
+</html>
