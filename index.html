@@ -237,12 +237,15 @@
   .cal-weekdays > div{text-align:center;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;padding:6px 0}
   .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
   .cal-cell{
-    aspect-ratio:1;background:var(--panel2);border:1px solid var(--line);border-radius:10px;
-    padding:8px;display:flex;flex-direction:column;justify-content:space-between;
+    min-height:52px;max-height:80px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;
+    padding:6px;display:flex;flex-direction:column;justify-content:space-between;
     cursor:pointer;transition:.15s;position:relative;
   }
   .cal-cell:hover{border-color:var(--accent);background:#16223a}
-  .cal-cell.empty{background:transparent;border:none;cursor:default;pointer-events:none}
+  .cal-cell.empty{
+  background:transparent;border:none;cursor:default;pointer-events:none;
+  min-height:52px;max-height:80px;
+}
   .cal-cell.today{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,211,238,.25) inset}
   .cal-cell.selected{background:#16223a;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
   .cal-cell .day-num{font-size:14px;font-weight:800;color:var(--txt);line-height:1}
@@ -315,6 +318,18 @@
     border-radius:50%;display:inline-block;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:7px
   }
   @keyframes sp{to{transform:rotate(360deg)}}
+
+  @media(max-width:640px){
+  .calendar-wrap{padding:12px}
+  .cal-grid{gap:4px}
+  .cal-weekdays{gap:4px}
+  .cal-cell{min-height:44px;max-height:64px;padding:4px;border-radius:8px}
+  .cal-cell.empty{min-height:44px;max-height:64px}
+  .cal-cell .day-num{font-size:12px}
+  .cal-month{font-size:16px}
+  .cal-weekdays > div{font-size:10px;letter-spacing:.4px}
+  .cal-badge{font-size:8px;padding:1px 4px}
+}
 </style>
 </head>
 <body>
