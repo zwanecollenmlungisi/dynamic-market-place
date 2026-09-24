@@ -2076,6 +2076,76 @@ document.addEventListener("click", (e) => {
     if (s) openServiceModal(s);
   }
 });
+  /* ============================================================
+   LISTING RENEWAL
+   ============================================================ */
+async function renewListing(kind, id) {
+  const btn = event.target;
+  busy(btn, true, "…");
+  const { error } = await sb.rpc('renew_listing', {
+    p_kind: kind,
+    p_id: id
+  });
+  busy(btn, false, "Renew");
+  if (error) return toast("Renewal failed: " + error.message, "err");
+  toast("✅ Listing renewed for another 60 days!", "ok");
+  await Promise.all([loadItems(), loadServices()]);
+  renderListingHealth();
+}
+
+/* ============================================================
+   LISTING HEALTH BANNER
+   ============================================================ */
+async function renderListingHealth() {
+  const box = document.getElementById('listingHealth');
+  if (!box) return;
+
+  const { data, error } = await sb.from('listing_health').select('*');
+  if (error || !data) { box.innerHTML = ''; return; }
+
+  const expired = data.filter(x => x.status === 'expired');
+  const expiringSoon = data.filter(x => {
+    if (x.status !== 'active') return false;
+    const days = Math.floor((new Date(x.expires_at) - new Date()) / 86400000);
+    return days <= 7 && days >= 0;
+  });
+
+  if (!expired.length && !expiringSoon.length) { box.innerHTML = ''; return; }
+
+  let html = '';
+
+  if (expiringSoon.length) {
+    html += `
+      <div class="banner" style="margin-bottom:14px">
+        ⏰ <b>${expiringSoon.length} listing(s) expiring within 7 days.</b>
+        Renew them to keep them visible on the marketplace.
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+          ${expiringSoon.map(x => `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;background:#0c1524;padding:10px 14px;border-radius:10px;border:1px solid #4a3a12">
+              <span>${esc(x.title)} <span class="small muted">· expires ${new Date(x.expires_at).toLocaleDateString()}</span></span>
+              <button class="btn primary sm" onclick="renewListing('${x.kind}','${x.id}')">Renew</button>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  if (expired.length) {
+    html += `
+      <div class="banner err" style="margin-bottom:14px">
+        ⚠️ <b>${expired.length} listing(s) expired</b> and are no longer visible on the marketplace.
+        Renew them within 30 days to restore them.
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+          ${expired.map(x => `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;background:#1a0f10;padding:10px 14px;border-radius:10px;border:1px solid #7a1e26">
+              <span>${esc(x.title)} <span class="small muted">· expired ${new Date(x.expires_at).toLocaleDateString()}</span></span>
+              <button class="btn primary sm" onclick="renewListing('${x.kind}','${x.id}')">Renew</button>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  box.innerHTML = html;
+}
 
 /* ============================================================
    PAGE ROUTER
@@ -2084,6 +2154,7 @@ function switchPage(name) {
   $$(".page").forEach(p => p.classList.toggle("hidden", p.id !== "page-" + name));
   $$(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.page === name));
   if (name === "profile")  renderProfilePage();
+  renderlistinghealth();
   if (name === "bookings") loadBookings();
   if (name === "offer")    renderOfferNotice();
 }
