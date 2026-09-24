@@ -1406,7 +1406,8 @@ function countdownChip(expiresAt) {
   if (exp < now) return `<span class="countdown-chip expired">Expired</span>`;
   const days = Math.max(1, Math.floor((exp - now) / 86400000));
   const cls = days <= 7 ? 'warn' : '';
-  return `<span class="countdown-chip ${cls}">${days}d left</span>`;
+  const label = days === 1 ? '1 day left to expire' : `${days} days left to expire`;
+  return `<span class="countdown-chip ${cls}">${label}</span>`;
 }
 
 function itemCardHTML(it) {
