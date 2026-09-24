@@ -27,7 +27,6 @@
   h1,h2,h3{margin:0 0 8px}
   a{color:var(--accent)}
 
-  /* ---------- buttons & inputs ---------- */
   .btn{
     border:1px solid var(--line);background:#16223a;color:var(--txt);
     padding:10px 16px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:600;
@@ -51,7 +50,7 @@
   label span{display:block;margin-bottom:6px;font-weight:600;color:#b9c8e4}
   textarea{resize:vertical;min-height:110px}
 
-  /* ---------- auth ---------- */
+  /* AUTH */
   .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:26px}
   .auth-card{
     width:100%;max-width:520px;background:rgba(16,26,46,.86);backdrop-filter:blur(14px);
@@ -73,7 +72,7 @@
   .msg{margin:12px 0 0;font-size:13px;min-height:18px}
   .msg.err{color:#ff9b9b} .msg.ok{color:#8ff0b5}
 
-  /* ---------- app shell ---------- */
+  /* APP SHELL */
   .topbar{
     display:flex;align-items:center;gap:14px;padding:12px 20px;flex-wrap:wrap;
     background:rgba(10,17,32,.9);backdrop-filter:blur(12px);
@@ -106,7 +105,25 @@
   .banner.ok{border-color:#14532d;background:rgba(34,197,94,.12);color:#a7f3c6}
   .banner.err{border-color:#7a1e26;background:rgba(239,68,68,.10);color:#ffb3b3}
 
-  /* ---------- cards ---------- */
+  /* CLOCK */
+  .clock-widget{
+    display:flex;align-items:center;gap:10px;
+    padding:6px 14px;border-radius:12px;
+    background:var(--panel2);border:1px solid var(--line);
+    font-variant-numeric:tabular-nums;
+  }
+  .clock-widget .clock-icon{font-size:18px;opacity:.85}
+  .clock-time{
+    font-size:15px;font-weight:800;color:var(--accent);
+    letter-spacing:.5px;line-height:1.1;
+  }
+  .clock-date{
+    font-size:11px;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.8px;font-weight:700;line-height:1.2;
+  }
+  @media(max-width:640px){.clock-widget{display:none}}
+
+  /* CARDS */
   .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:18px}
   .card{
     background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
@@ -134,7 +151,18 @@
     border:1px dashed var(--line);border-radius:var(--radius);
   }
 
-  /* ---------- filters ---------- */
+  /* COUNTDOWN CHIP */
+  .countdown-chip{
+    display:inline-block;padding:2px 8px;border-radius:20px;
+    font-size:10.5px;font-weight:800;letter-spacing:.4px;
+    text-transform:uppercase;
+    background:#182642;color:#9fb6da;
+    border:1px solid var(--line);
+  }
+  .countdown-chip.warn{background:rgba(245,158,11,.15);color:#ffd88a;border-color:#4a3a12}
+  .countdown-chip.expired{background:rgba(239,68,68,.12);color:#ffb3b3;border-color:#7a1e26}
+
+  /* FILTERS */
   .filters{
     display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;
     background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
@@ -145,7 +173,7 @@
   .switch{display:flex;align-items:center;gap:8px;color:#b9c8e4;font-weight:600;font-size:13px}
   .switch input{width:auto}
 
-  /* ---------- panel ---------- */
+  /* PANELS */
   .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px}
   .drop{
     border:2px dashed #2b4066;border-radius:12px;padding:24px;text-align:center;
@@ -164,7 +192,7 @@
   .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0 14px}
   @media(max-width:640px){.row,.row3,.grid2{grid-template-columns:1fr}.search{margin-left:0;width:100%}}
 
-  /* ---------- availability builder ---------- */
+  /* SLOTS */
   .slots{display:flex;flex-direction:column;gap:8px;margin-top:8px}
   .slot{
     display:grid;grid-template-columns:1.4fr 1fr 1fr auto;gap:8px;align-items:center;
@@ -174,7 +202,7 @@
   @media(max-width:640px){.slot{grid-template-columns:1fr 1fr;gap:6px}}
   .slot-x{background:#3b1116;border:1px solid #7a1e26;color:#ffb3b3;width:30px;height:30px;border-radius:8px;cursor:pointer;font-weight:800}
 
-  /* ---------- bookings ---------- */
+  /* BOOKINGS */
   .bk{
     display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;
     background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
@@ -198,7 +226,39 @@
   .section-tab{padding:8px 16px;border:none;background:transparent;color:var(--muted);border-radius:9px;cursor:pointer;font-weight:700;font-size:13px}
   .section-tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#04121f}
 
-  /* ---------- modal ---------- */
+  /* CALENDAR */
+  .calendar-wrap{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);padding:20px;
+  }
+  .calendar-head{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+  .cal-month{font-size:18px;font-weight:800;color:var(--txt);flex:1;text-align:center;letter-spacing:-.3px}
+  .cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px}
+  .cal-weekdays > div{text-align:center;font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;padding:6px 0}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .cal-cell{
+    aspect-ratio:1;background:var(--panel2);border:1px solid var(--line);border-radius:10px;
+    padding:8px;display:flex;flex-direction:column;justify-content:space-between;
+    cursor:pointer;transition:.15s;position:relative;
+  }
+  .cal-cell:hover{border-color:var(--accent);background:#16223a}
+  .cal-cell.empty{background:transparent;border:none;cursor:default;pointer-events:none}
+  .cal-cell.today{border-color:var(--accent);box-shadow:0 0 0 2px rgba(34,211,238,.25) inset}
+  .cal-cell.selected{background:#16223a;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+  .cal-cell .day-num{font-size:14px;font-weight:800;color:var(--txt);line-height:1}
+  .cal-cell.today .day-num{color:var(--accent)}
+  .cal-cell.other-month .day-num{color:#3d5578;font-weight:600}
+  .cal-cell .dots{display:flex;gap:3px;flex-wrap:wrap}
+  .cal-cell .dot{width:6px;height:6px;border-radius:50%}
+  .dot-customer{background:var(--accent)}
+  .dot-provider{background:var(--accent2)}
+  .dot-both{background:var(--ok)}
+  .cal-badge{position:absolute;top:4px;right:4px;background:var(--accent);color:#04121f;font-size:9px;font-weight:800;border-radius:10px;padding:2px 5px;line-height:1}
+  .cal-day-detail{margin-top:18px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+  .cal-day-detail h3{margin:0 0 12px;font-size:15px;color:var(--txt);padding-left:10px;border-left:3px solid var(--accent)}
+  .cal-day-detail .empty{color:var(--muted);font-size:13px;text-align:center;padding:20px;border:none}
+
+  /* MODALS */
   .modal{
     position:fixed;inset:0;background:rgba(3,7,15,.8);backdrop-filter:blur(6px);
     display:grid;place-items:center;padding:20px;z-index:80;
@@ -226,10 +286,8 @@
   .bk-form{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:16px}
   .bk-form h4{margin:0 0 12px;font-size:14px;color:#b9c8e4}
 
-  /* ---------- gate screens ---------- */
-  .gate-wrap{
-    min-height:80vh;display:flex;align-items:center;justify-content:center;padding:20px;
-  }
+  /* GATE SCREENS */
+  .gate-wrap{min-height:80vh;display:flex;align-items:center;justify-content:center;padding:20px}
   .gate-card{
     width:100%;max-width:600px;background:rgba(16,26,46,.9);backdrop-filter:blur(14px);
     border:1px solid var(--line);border-radius:20px;padding:32px;text-align:center;
@@ -238,142 +296,11 @@
   .gate-card .logo{margin:0 auto 20px;width:56px;height:56px;font-size:28px}
   .gate-card h1{font-size:22px;margin-bottom:10px}
   .gate-card .lead{color:var(--muted);line-height:1.6;margin:10px 0 20px;font-size:14px}
-  .price-box{
-    background:#0c1524;padding:22px;border-radius:14px;border:1px solid #1e2b45;
-    margin-bottom:22px;text-align:left;
-  }
+  .price-box{background:#0c1524;padding:22px;border-radius:14px;border:1px solid #1e2b45;margin-bottom:22px;text-align:left}
   .price-box .kv:last-child{border-bottom:none;font-size:18px;padding-top:14px}
   .price-box .total{color:var(--accent);font-weight:800}
-/* ============================================================
-   CLOCK WIDGET
-   ============================================================ */
-.clock-widget{
-  display:flex;align-items:center;gap:10px;
-  padding:6px 14px;border-radius:12px;
-  background:var(--panel2);border:1px solid var(--line);
-  font-variant-numeric:tabular-nums;
-}
-.clock-widget .clock-icon{font-size:18px;opacity:.85}
-.clock-time{
-  font-size:15px;font-weight:800;color:var(--accent);
-  letter-spacing:.5px;line-height:1.1;
-}
-.clock-date{
-  font-size:11px;color:var(--muted);text-transform:uppercase;
-  letter-spacing:.8px;font-weight:700;line-height:1.2;
-}
-@media(max-width:640px){.clock-widget{display:none}}
 
-/* ============================================================
-   CALENDAR
-   ============================================================ */
-.calendar-wrap{
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:var(--radius);padding:20px;
-}
-.calendar-head{
-  display:flex;align-items:center;gap:10px;margin-bottom:18px;
-}
-.cal-month{
-  font-size:18px;font-weight:800;color:var(--txt);
-  flex:1;text-align:center;letter-spacing:-.3px;
-}
-.cal-weekdays{
-  display:grid;grid-template-columns:repeat(7,1fr);gap:6px;
-  margin-bottom:8px;
-}
-.cal-weekdays > div{
-  text-align:center;font-size:11px;font-weight:800;
-  color:var(--muted);text-transform:uppercase;letter-spacing:.7px;
-  padding:6px 0;
-}
-.cal-grid{
-  display:grid;grid-template-columns:repeat(7,1fr);gap:6px;
-}
-.cal-cell{
-  aspect-ratio:1;
-  background:var(--panel2);
-  border:1px solid var(--line);
-  border-radius:10px;
-  padding:8px;
-  display:flex;flex-direction:column;
-  justify-content:space-between;
-  cursor:pointer;
-  transition:.15s;
-  position:relative;
-}
-.cal-cell:hover{
-  border-color:var(--accent);
-  background:#16223a;
-}
-.cal-cell.empty{
-  background:transparent;border:none;cursor:default;
-  pointer-events:none;
-}
-.cal-cell.today{
-  border-color:var(--accent);
-  box-shadow:0 0 0 2px rgba(34,211,238,.25) inset;
-}
-.cal-cell.selected{
-  background:#16223a;
-  border-color:var(--accent);
-  box-shadow:0 0 0 2px var(--accent);
-}
-.cal-cell .day-num{
-  font-size:14px;font-weight:800;color:var(--txt);
-  line-height:1;
-}
-.cal-cell.today .day-num{color:var(--accent)}
-.cal-cell.other-month .day-num{color:#3d5578;font-weight:600}
-.cal-cell .dots{
-  display:flex;gap:3px;flex-wrap:wrap;
-}
-.cal-cell .dot{
-  width:6px;height:6px;border-radius:50%;
-}
-.dot-customer{background:var(--accent)}
-.dot-provider{background:var(--accent2)}
-.dot-both{background:var(--ok)}
-.cal-badge{
-  position:absolute;top:4px;right:4px;
-  background:var(--accent);color:#04121f;
-  font-size:9px;font-weight:800;
-  border-radius:10px;padding:2px 5px;line-height:1;
-}
-
-.cal-day-detail{
-  margin-top:18px;
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:var(--radius);padding:18px;
-}
-.cal-day-detail h3{
-  margin:0 0 12px;font-size:15px;color:var(--txt);
-  padding-left:10px;border-left:3px solid var(--accent);
-}
-.cal-day-detail .empty{
-  color:var(--muted);font-size:13px;text-align:center;
-  padding:20px;border:none;
-}
-
-/* ============================================================
-   LISTING COUNTDOWN CHIP
-   ============================================================ */
-.countdown-chip{
-  display:inline-block;padding:2px 8px;border-radius:20px;
-  font-size:10.5px;font-weight:800;letter-spacing:.4px;
-  text-transform:uppercase;
-  background:#182642;color:#9fb6da;
-  border:1px solid var(--line);
-}
-.countdown-chip.warn{
-  background:rgba(245,158,11,.15);color:#ffd88a;
-  border-color:#4a3a12;
-}
-.countdown-chip.expired{
-  background:rgba(239,68,68,.12);color:#ffb3b3;
-  border-color:#7a1e26;
-}
-  /* ---------- toast ---------- */
+  /* TOAST */
   .toast{
     position:fixed;left:50%;bottom:26px;transform:translate(-50%,150%);
     background:#16223a;border:1px solid var(--line);border-left:4px solid var(--accent);
@@ -482,14 +409,15 @@
       <button class="tab-btn"        data-page="profile"  type="button">👤 Profile</button>
     </nav>
     <div class="spacer"></div>
-    
+
     <div class="clock-widget" id="clockWidget">
-  <div class="clock-icon">🕐</div>
-  <div>
-    <div class="clock-time" id="clockTime">--:--:--</div>
-    <div class="clock-date" id="clockDate">—</div>
-  </div>
-</div>
+      <div class="clock-icon">🕐</div>
+      <div>
+        <div class="clock-time" id="clockTime">--:--:--</div>
+        <div class="clock-date" id="clockDate">—</div>
+      </div>
+    </div>
+
     <div class="user-chip">
       <div class="avatar" id="avatarInitial">?</div>
       <div style="line-height:1.25">
@@ -501,14 +429,12 @@
   </header>
 
   <main id="appMain">
-    <!-- ---------- GATE CONTAINER (payment / renewal / pending) ---------- -->
     <div id="gateContainer" class="hidden"></div>
 
-    <!-- ---------- APP CONTENT (market, services, forms, profile) ---------- -->
     <div id="appContent" class="hidden">
       <div id="verifyBanner" class="banner hidden"></div>
 
-      <!-- MARKET PAGE -->
+      <!-- MARKET -->
       <div id="page-market" class="page">
         <div class="page-head">
           <div>
@@ -522,7 +448,7 @@
         <div id="grid" class="grid"></div>
       </div>
 
-      <!-- SERVICES PAGE -->
+      <!-- SERVICES -->
       <div id="page-services" class="page hidden">
         <div class="page-head">
           <div>
@@ -533,7 +459,6 @@
             <input id="svcQ" placeholder="Search services, providers, areas…" />
           </div>
         </div>
-
         <div class="filters">
           <label><span>Category</span>
             <select id="svcCategory"><option value="">All categories</option></select>
@@ -561,11 +486,10 @@
             <button class="btn sm" id="svcClear" type="button">Clear</button>
           </div>
         </div>
-
         <div id="svcGrid" class="grid"></div>
       </div>
 
-      <!-- SELL ITEM PAGE -->
+      <!-- SELL ITEM -->
       <div id="page-sell" class="page hidden">
         <div class="page-head">
           <div>
@@ -573,7 +497,6 @@
             <p class="small muted">Add a clear description and up to 10 pictures</p>
           </div>
         </div>
-
         <div class="panel">
           <form id="itemForm">
             <label><span>Item title *</span>
@@ -609,7 +532,6 @@
               <textarea name="description" maxlength="2000"
                 placeholder="Describe condition, size, brand, age, delivery options, warranty…" required></textarea>
             </label>
-
             <label><span>Pictures — up to 10 *</span></label>
             <div class="drop" id="dropZone">
               <div style="font-size:26px">📷</div>
@@ -619,7 +541,6 @@
             <input type="file" id="itemImages" accept="image/*" multiple class="hidden" />
             <div class="previews" id="previews"></div>
             <div class="counter" id="imgCounter">0 / 10 pictures selected</div>
-
             <div style="margin-top:22px;display:flex;gap:10px;flex-wrap:wrap">
               <button class="btn primary" type="submit" id="publishBtn">Publish listing</button>
               <button class="btn" type="reset" id="resetBtn">Clear form</button>
@@ -628,7 +549,7 @@
         </div>
       </div>
 
-      <!-- OFFER SERVICE PAGE -->
+      <!-- OFFER SERVICE -->
       <div id="page-offer" class="page hidden">
         <div class="page-head">
           <div>
@@ -636,9 +557,7 @@
             <p class="small muted">Publish what you offer, your weekly hours and pricing</p>
           </div>
         </div>
-
         <div id="offerNotice" class="banner hidden"></div>
-
         <div class="panel">
           <form id="serviceForm">
             <div class="row">
@@ -651,12 +570,10 @@
                 <input name="title" maxlength="100" placeholder="e.g. Deep Tissue Massage — 60 minutes" required />
               </label>
             </div>
-
             <label><span>Description *</span>
               <textarea name="description" maxlength="2000"
                 placeholder="What you offer, what a client can expect, what to bring, preparation, etc." required></textarea>
             </label>
-
             <div class="row3">
               <label><span>Price *</span>
                 <input name="price" type="number" min="0" step="0.01" required />
@@ -677,7 +594,6 @@
                 </select>
               </label>
             </div>
-
             <div class="row3">
               <label><span>Delivery mode *</span>
                 <select name="delivery_mode" id="svcFormMode">
@@ -694,7 +610,6 @@
                 <input name="service_area" placeholder="Johannesburg, South Africa" />
               </label>
             </div>
-
             <div class="row3">
               <label><span>Min notice (hours)</span>
                 <input name="min_notice_hours" type="number" min="0" value="24" />
@@ -706,11 +621,9 @@
                 <input name="languages" placeholder="English, Zulu" />
               </label>
             </div>
-
             <label><span>Tags (comma-separated)</span>
               <input name="tags" placeholder="relaxation, sports, home-visit" />
             </label>
-
             <label><span>Pictures — up to 10 *</span></label>
             <div class="drop" id="svcDropZone">
               <div style="font-size:26px">📷</div>
@@ -720,14 +633,10 @@
             <input type="file" id="svcImages" accept="image/*" multiple class="hidden" />
             <div class="previews" id="svcPreviews"></div>
             <div class="counter" id="svcImgCounter">0 / 10 pictures selected</div>
-
             <label style="margin-top:22px"><span>Weekly availability</span></label>
-            <p class="small muted" style="margin:-6px 0 10px">
-              Add the time windows you are normally available.
-            </p>
+            <p class="small muted" style="margin:-6px 0 10px">Add the time windows you are normally available.</p>
             <div class="slots" id="slots"></div>
             <button class="btn sm" type="button" id="addSlot" style="margin-top:10px">＋ Add time slot</button>
-
             <div style="margin-top:24px;display:flex;gap:10px;flex-wrap:wrap">
               <button class="btn primary" type="submit" id="svcPublishBtn">Publish service</button>
               <button class="btn" type="reset" id="svcResetBtn">Clear form</button>
@@ -736,52 +645,58 @@
         </div>
       </div>
 
-      <!-- BOOKINGS PAGE -->
-<div id="page-bookings" class="page hidden">
-  <div class="page-head">
-    <div>
-      <h2>Bookings</h2>
-      <p class="small muted">Requests you've made and requests you've received</p>
-    </div>
-  </div>
+      <!-- BOOKINGS -->
+      <div id="page-bookings" class="page hidden">
+        <div class="page-head">
+          <div>
+            <h2>Bookings</h2>
+            <p class="small muted">Requests you've made and requests you've received</p>
+          </div>
+        </div>
 
-  <div class="section-tabs">
-    <button class="section-tab"        data-view="list"     type="button">📋 List view</button>
-    <button class="section-tab active" data-view="calendar" type="button">📅 Calendar</button>
-  </div>
+        <div class="section-tabs">
+          <button class="section-tab active" data-view="calendar" type="button">📅 Calendar</button>
+          <button class="section-tab"        data-view="list"     type="button">📋 List view</button>
+        </div>
 
-  <!-- CALENDAR VIEW -->
-  <div id="calendarView">
-    <div class="calendar-wrap">
-      <div class="calendar-head">
-        <button class="btn sm" id="calPrev" type="button">‹</button>
-        <div class="cal-month" id="calMonth">Loading…</div>
-        <button class="btn sm" id="calNext" type="button">›</button>
-        <button class="btn sm" id="calToday" type="button" style="margin-left:8px">Today</button>
+        <!-- CALENDAR VIEW -->
+        <div id="calendarView">
+          <div class="calendar-wrap">
+            <div class="calendar-head">
+              <button class="btn sm" id="calPrev" type="button">‹</button>
+              <div class="cal-month" id="calMonth">Loading…</div>
+              <button class="btn sm" id="calNext" type="button">›</button>
+              <button class="btn sm" id="calToday" type="button" style="margin-left:8px">Today</button>
+            </div>
+            <div class="cal-weekdays">
+              <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+            </div>
+            <div class="cal-grid" id="calGrid"></div>
+          </div>
+          <div id="calDayDetail" class="cal-day-detail hidden"></div>
+        </div>
+
+        <!-- LIST VIEW -->
+        <div id="listView" class="hidden">
+          <div class="section-tabs" style="margin-bottom:18px">
+            <button class="section-tab active" data-bk="incoming" type="button">Incoming (provider)</button>
+            <button class="section-tab"        data-bk="outgoing" type="button">My requests (customer)</button>
+          </div>
+          <div id="bkList"></div>
+        </div>
       </div>
-      <div class="cal-weekdays">
-        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-      </div>
-      <div class="cal-grid" id="calGrid"></div>
-    </div>
 
-    <div id="calDayDetail" class="cal-day-detail hidden"></div>
-  </div>
-
-  <!-- LIST VIEW -->
-  <div id="listView" class="hidden">
-    <div class="section-tabs" style="margin-bottom:18px">
-      <button class="section-tab active" data-bk="incoming" type="button">Incoming (provider)</button>
-      <button class="section-tab"        data-bk="outgoing" type="button">My requests (customer)</button>
-    </div>
-    <div id="bkList"></div>
-  </div>
-</div>
-
-      <!-- PROFILE PAGE -->
+      <!-- PROFILE -->
       <div id="page-profile" class="page hidden">
-        <div class="page-head"><div><h2>My profile &amp; verification</h2>
-          <p class="small muted">Your identity details on file</p></div></div>
+        <div class="page-head">
+          <div>
+            <h2>My profile &amp; verification</h2>
+            <p class="small muted">Your identity details on file</p>
+          </div>
+        </div>
+
+        <div id="listingHealth"></div>
+
         <div class="panel">
           <div id="profileDetails"></div>
           <div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap">
@@ -865,8 +780,7 @@
             </label>
           </div>
           <label><span>Note to provider</span>
-            <textarea id="bkNote" rows="3" style="min-height:70px"
-              placeholder="Anything the provider should know…"></textarea>
+            <textarea id="bkNote" rows="3" style="min-height:70px" placeholder="Anything the provider should know…"></textarea>
           </label>
           <button class="btn primary wide" id="bkSubmit" type="button">Send booking request</button>
         </div>
@@ -878,25 +792,25 @@
 
 <script>
 /* ============================================================
-   CONFIGURATION — replace with your Supabase project values
+   CONFIGURATION
    ============================================================ */
 const SUPABASE_URL      = "https://jeqjzzlcmlrdnwkmpoxm.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImplcWp6emxjbWxyZG53a21wb3htIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk5MTcxNDksImV4cCI6MjEwNTQ5MzE0OX0.a-1ahOzgCNtaDpIIB1B310L-wj4QXeaizi4rR4Wh3-I";
 
 const MAX_IMAGES = 10;
 const BUCKET     = "item-images";
-const RENEWAL_MONTHS = 12;
 
-const configured = !SUPABASE_URL.includes("YOUR-PROJECT") && !SUPABASE_ANON_KEY.includes("YOUR-PUBLIC");
-const sb = configured
-  ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
-  : null;
+const configured = !SUPABASE_URL.includes("YOUR-SUPABASE");
+const sb = configured ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
-/* ---------------- helpers ---------------- */
+/* ============================================================
+   HELPERS
+   ============================================================ */
 const $  = (s) => document.querySelector(s);
 const $$ = (s) => Array.from(document.querySelectorAll(s));
 const esc = (v) => String(v ?? "").replace(/[&<>"']/g, c =>
   ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+
 const toLocalInput = (d) => {
   const p = (n) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
@@ -909,10 +823,8 @@ const fmtMoney = (amount, currency = "ZAR") =>
 
 const WEEKDAYS = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const MODE_LABEL = {
-  in_person: "At provider",
-  at_client: "At client's location",
-  remote:    "Remote / online",
-  flexible:  "Flexible"
+  in_person: "At provider", at_client: "At client's location",
+  remote: "Remote / online", flexible: "Flexible"
 };
 const PRICING_LABEL = {
   per_hour:"/ hour", per_session:"/ session", per_day:"/ day",
@@ -939,7 +851,9 @@ function busy(btn, on, label) {
   else { btn.innerHTML = btn.dataset.label || label; btn.disabled = false; }
 }
 
-/* ---------------- state ---------------- */
+/* ============================================================
+   STATE
+   ============================================================ */
 let currentUser    = null;
 let currentProfile = null;
 
@@ -948,18 +862,23 @@ let allServices = [];
 let categories  = [];
 let myBookings  = { incoming: [], outgoing: [] };
 let bookingsTab = "incoming";
+let bookingsView = "calendar";
 
-let selectedFiles  = [];
-let previewUrls    = [];
-let svcFiles       = [];
+let itemFiles = { list: [] };
+let itemPreviewUrls = [];
+let svcFiles = { list: [] };
 let svcPreviewUrls = [];
 
 let activeService = null;
 let activeItem    = null;
 let myListingsMode = "";
 
+let calDate = new Date();
+let calBookings = [];
+let calSelectedDay = null;
+
 /* ============================================================
-   AUTH — TAB SWITCHER
+   AUTH — TABS
    ============================================================ */
 $$(".tab").forEach(tab => tab.addEventListener("click", () => {
   $$(".tab").forEach(t => t.classList.toggle("active", t === tab));
@@ -999,12 +918,10 @@ $("#signupForm").addEventListener("submit", async (e) => {
   busy(btn, true, "Creating account…");
   setMsg("");
 
-  // 👇 Redirect target after email confirmation (GitHub Pages compatible)
   const emailRedirectTo = window.location.origin + window.location.pathname;
 
   const { data, error } = await sb.auth.signUp({
-    email,
-    password,
+    email, password,
     options: { data: payload, emailRedirectTo }
   });
   busy(btn, false, "Create my account");
@@ -1012,19 +929,14 @@ $("#signupForm").addEventListener("submit", async (e) => {
   if (error) {
     const msg = (error.message || "").toLowerCase();
     if (msg.includes("already registered") || msg.includes("already exists") || msg.includes("user already")) {
-      setMsg(
-        "This email already has an account. Please switch to the Sign in tab — if your membership expired you can renew from there.",
-        "err"
-      );
+      setMsg("This email already has an account. Please switch to the Sign in tab — if your membership expired you can renew from there.", "err");
       document.querySelector('.tab[data-tab="signin"]').click();
       return;
     }
-    if (msg.includes("profiles_phone_unique")) {
+    if (msg.includes("profiles_phone_unique"))
       return setMsg("This phone number is already registered. Please sign in or use a different number.", "err");
-    }
-    if (msg.includes("profiles_id_number_unique")) {
+    if (msg.includes("profiles_id_number_unique"))
       return setMsg("This ID / Passport number is already registered. Please sign in or use a different ID.", "err");
-    }
     return setMsg(error.message, "err");
   }
 
@@ -1065,9 +977,9 @@ $("#signinForm").addEventListener("submit", async (e) => {
    ============================================================ */
 async function signOutNow() {
   try { await sb.auth.signOut(); } catch (e) { /* ignore */ }
-  currentUser = null;
-  currentProfile = null;
-  allItems = []; allServices = []; myBookings = { incoming: [], outgoing: [] };
+  currentUser = null; currentProfile = null;
+  allItems = []; allServices = [];
+  myBookings = { incoming: [], outgoing: [] };
   showAuth();
   toast("Signed out.");
 }
@@ -1082,12 +994,10 @@ $("#signOutBtn").addEventListener("click", signOutNow);
     return;
   }
 
-  // Detect return from Yoco (either in search or hash for safety)
   const urlSearch = new URLSearchParams(window.location.search);
   const urlHash   = new URLSearchParams(window.location.hash.replace(/^#/, ''));
   const paymentResult = urlSearch.get('payment') || urlHash.get('payment');
   if (paymentResult) {
-    // Clean the URL so a refresh doesn't retrigger
     const cleanUrl = window.location.origin + window.location.pathname;
     window.history.replaceState(null, "", cleanUrl);
     sessionStorage.setItem('paymentResult', paymentResult);
@@ -1098,8 +1008,7 @@ $("#signOutBtn").addEventListener("click", signOutNow);
 
   sb.auth.onAuthStateChange((event) => {
     if (event === "SIGNED_OUT") {
-      currentUser = null;
-      currentProfile = null;
+      currentUser = null; currentProfile = null;
       showAuth();
     }
   });
@@ -1112,7 +1021,7 @@ function showAuth() {
 }
 
 /* ============================================================
-   ENTER APP — route to gate or marketplace based on subscription
+   ENTER APP
    ============================================================ */
 async function enterApp(user) {
   currentUser = user;
@@ -1122,13 +1031,10 @@ async function enterApp(user) {
   await loadProfile(user);
   renderUserChip();
 
-  // 🔍 Check the subscription status
   let status = 'none';
   try {
     const { data, error } = await sb.rpc('subscription_status');
     if (error) {
-      console.warn('subscription_status RPC error:', error.message);
-      // Fallback: try has_paid_access
       const { data: hasAccess } = await sb.rpc('has_paid_access');
       status = hasAccess ? 'active' : 'none';
     } else {
@@ -1138,10 +1044,8 @@ async function enterApp(user) {
     console.warn('subscription check failed:', e.message);
   }
 
-  // Handle payment redirect results (from Yoco)
   const payResult = sessionStorage.getItem('paymentResult');
   if (payResult === 'success' && status === 'pending') {
-    // Poll for a short while — webhook usually fires within a few seconds
     status = await pollForActive(20000);
   }
   sessionStorage.removeItem('paymentResult');
@@ -1163,19 +1067,10 @@ async function pollForActive(timeoutMs = 20000) {
 
 function routeByStatus(status) {
   switch (status) {
-    case 'active':
-      showMarketplace();
-      break;
-    case 'expired':
-      showRenewalGate();
-      break;
-    case 'pending':
-      showPendingGate();
-      break;
-    case 'none':
-    default:
-      showPaymentGate();
-      break;
+    case 'active':  showMarketplace(); break;
+    case 'expired': showRenewalGate(); break;
+    case 'pending': showPendingGate(); break;
+    default:        showPaymentGate(); break;
   }
 }
 
@@ -1201,24 +1096,14 @@ function showPaymentGate() {
       <div class="gate-card">
         <div class="logo">D</div>
         <h1>Welcome to Dynamic Market Place</h1>
-        <p class="lead">
-          Hi ${esc(currentProfile?.full_name || 'there')} — you're almost in.
-          Activate your 12-month marketplace membership to start buying and selling.
-        </p>
+        <p class="lead">Hi ${esc(currentProfile?.full_name || 'there')} — you're almost in. Activate your 12-month marketplace membership to start buying and selling.</p>
         <div class="price-box">
           <div class="kv"><span>Platform Access Fee (12 months)</span><b>R 225.00</b></div>
           <div class="kv"><span>VAT (15%)</span><b>R 33.75</b></div>
           <div class="kv"><span>Total Due Today</span><b class="total">R 258.75</b></div>
         </div>
-        <button class="btn primary wide" id="payNowBtn"
-          style="padding:14px;font-size:16px;"
-          onclick="initiateYocoPayment('membership')">
-          Pay R 258.75 with Yoco
-        </button>
-        <p class="small muted" style="margin-top:16px;line-height:1.5">
-          Once-off payment for 12 months of marketplace access. Optional renewal.
-          All buyer–seller transactions are handled directly between the parties.
-        </p>
+        <button class="btn primary wide" id="payNowBtn" style="padding:14px;font-size:16px" onclick="initiateYocoPayment('membership')">Pay R 258.75 with Yoco</button>
+        <p class="small muted" style="margin-top:16px;line-height:1.5">Once-off payment for 12 months of marketplace access. Optional renewal. All buyer–seller transactions are handled directly between the parties.</p>
         <button class="btn ghost" style="margin-top:14px" onclick="signOutNow()">Sign out</button>
       </div>
     </div>
@@ -1231,24 +1116,14 @@ function showRenewalGate() {
       <div class="gate-card">
         <div class="logo" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">⏳</div>
         <h1>Your Membership Has Expired</h1>
-        <p class="lead">
-          Hi ${esc(currentProfile?.full_name || 'there')} — your 12-month access to
-          Dynamic Market Place has ended. Renew today to keep buying and selling.
-        </p>
+        <p class="lead">Hi ${esc(currentProfile?.full_name || 'there')} — your 12-month access to Dynamic Market Place has ended. Renew today to keep buying and selling.</p>
         <div class="price-box">
           <div class="kv"><span>Renewal Fee (12 months)</span><b>R 225.00</b></div>
           <div class="kv"><span>VAT (15%)</span><b>R 33.75</b></div>
           <div class="kv"><span>Total Due Today</span><b class="total">R 258.75</b></div>
         </div>
-        <button class="btn primary wide" id="payNowBtn"
-          style="padding:14px;font-size:16px;"
-          onclick="initiateYocoPayment('renewal')">
-          Renew Now — R 258.75
-        </button>
-        <p class="small muted" style="margin-top:16px;line-height:1.5">
-          Your account, listings and history are preserved. Renewing simply restores
-          your access for another 12 months.
-        </p>
+        <button class="btn primary wide" id="payNowBtn" style="padding:14px;font-size:16px" onclick="initiateYocoPayment('renewal')">Renew Now — R 258.75</button>
+        <p class="small muted" style="margin-top:16px;line-height:1.5">Your account, listings and history are preserved. Renewing simply restores your access for another 12 months.</p>
         <button class="btn ghost" style="margin-top:14px" onclick="signOutNow()">Sign out</button>
       </div>
     </div>
@@ -1261,10 +1136,7 @@ function showPendingGate() {
       <div class="gate-card">
         <div class="logo">⏱</div>
         <h1>Payment Processing…</h1>
-        <p class="lead">
-          We're waiting for Yoco to confirm your payment. This usually takes a few seconds.
-          Click refresh once you've completed the payment on the Yoco page.
-        </p>
+        <p class="lead">We're waiting for Yoco to confirm your payment. This usually takes a few seconds. Click refresh once you've completed the payment on the Yoco page.</p>
         <button class="btn primary wide" onclick="location.reload()">Refresh status</button>
         <button class="btn ghost" style="margin-top:14px" onclick="signOutNow()">Sign out</button>
       </div>
@@ -1282,7 +1154,6 @@ function showMarketplace() {
   renderOfferNotice();
   switchPage("market");
 
-  // Load data in parallel
   Promise.all([
     loadCategories(),
     loadItems(),
@@ -1404,29 +1275,71 @@ function renderProfilePage() {
   ).join("");
 }
 
-$("#refreshProfileBtn").addEventListener("click", async () => {
-  await loadProfile(currentUser);
-  renderUserChip(); renderVerifyBanner(); renderOfferNotice(); renderProfilePage();
-  toast("Profile refreshed.", "ok");
-});
+/* ============================================================
+   LISTING HEALTH + RENEWAL
+   ============================================================ */
+async function renewListing(kind, id) {
+  const btn = event?.target;
+  busy(btn, true, "…");
+  const { error } = await sb.rpc('renew_listing', { p_kind: kind, p_id: id });
+  busy(btn, false, "Renew");
+  if (error) return toast("Renewal failed: " + error.message, "err");
+  toast("✅ Listing renewed for another 60 days!", "ok");
+  await Promise.all([loadItems(), loadServices()]);
+  renderListingHealth();
+}
 
-$("#myListingsBtn").addEventListener("click", () => {
-  const box = $("#myListings");
-  if (myListingsMode === "items") { box.innerHTML = ""; myListingsMode = ""; return; }
-  const mine = allItems.filter(i => i.seller_id === currentUser.id);
-  box.innerHTML = mine.length ? mine.map(itemCardHTML).join("")
-    : `<p class="empty">You have not listed any items yet.</p>`;
-  myListingsMode = "items";
-});
+async function renderListingHealth() {
+  const box = document.getElementById('listingHealth');
+  if (!box) return;
+  box.innerHTML = '';
 
-$("#myServicesBtn").addEventListener("click", () => {
-  const box = $("#myListings");
-  if (myListingsMode === "services") { box.innerHTML = ""; myListingsMode = ""; return; }
-  const mine = allServices.filter(s => s.provider_id === currentUser.id);
-  box.innerHTML = mine.length ? mine.map(serviceCardHTML).join("")
-    : `<p class="empty">You have not published any services yet.</p>`;
-  myListingsMode = "services";
-});
+  const { data, error } = await sb.from('listing_health').select('*');
+  if (error || !data || !data.length) return;
+
+  const expired = data.filter(x => x.status === 'expired');
+  const expiringSoon = data.filter(x => {
+    if (x.status !== 'active') return false;
+    const days = Math.floor((new Date(x.expires_at) - new Date()) / 86400000);
+    return days <= 7 && days >= 0;
+  });
+
+  if (!expired.length && !expiringSoon.length) return;
+
+  let html = '';
+
+  if (expiringSoon.length) {
+    html += `
+      <div class="banner" style="margin-bottom:14px">
+        ⏰ <b>${expiringSoon.length} listing(s) expiring within 7 days.</b>
+        Renew them to keep them visible on the marketplace.
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+          ${expiringSoon.map(x => `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;background:#0c1524;padding:10px 14px;border-radius:10px;border:1px solid #4a3a12">
+              <span>${esc(x.title)} <span class="small muted">· expires ${new Date(x.expires_at).toLocaleDateString()}</span></span>
+              <button class="btn primary sm" onclick="renewListing('${x.kind}','${x.id}')">Renew</button>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  if (expired.length) {
+    html += `
+      <div class="banner err" style="margin-bottom:14px">
+        ⚠️ <b>${expired.length} listing(s) expired</b> and are no longer visible on the marketplace.
+        Renew them within 30 days to restore them.
+        <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+          ${expired.map(x => `
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;background:#1a0f10;padding:10px 14px;border-radius:10px;border:1px solid #7a1e26">
+              <span>${esc(x.title)} <span class="small muted">· expired ${new Date(x.expires_at).toLocaleDateString()}</span></span>
+              <button class="btn primary sm" onclick="renewListing('${x.kind}','${x.id}')">Renew</button>
+            </div>`).join('')}
+        </div>
+      </div>`;
+  }
+
+  box.innerHTML = html;
+}
 
 /* ============================================================
    CATEGORIES
@@ -1458,7 +1371,8 @@ async function loadItems() {
 
   const { data, error } = await sb
     .from("items")
-    .select("id,title,description,price,currency,category,location,images,status,created_at,seller_id,seller:profiles!seller_id(full_name,phone,verified,city)")
+    .select("id,title,description,price,currency,category,location,images,status,expires_at,created_at,seller_id,seller:profiles!seller_id(full_name,phone,verified,city)")
+    .eq("status", "active")
     .order("created_at", { ascending: false })
     .limit(120);
 
@@ -1468,6 +1382,16 @@ async function loadItems() {
   }
   allItems = data || [];
   renderGrid(allItems);
+}
+
+function countdownChip(expiresAt) {
+  if (!expiresAt) return '';
+  const now = new Date();
+  const exp = new Date(expiresAt);
+  if (exp < now) return `<span class="countdown-chip expired">Expired</span>`;
+  const days = Math.max(1, Math.floor((exp - now) / 86400000));
+  const cls = days <= 7 ? 'warn' : '';
+  return `<span class="countdown-chip ${cls}">${days}d left</span>`;
 }
 
 function itemCardHTML(it) {
@@ -1483,6 +1407,7 @@ function itemCardHTML(it) {
       <div class="card-body">
         <h3>${esc(it.title)}</h3>
         <div class="price">${esc(it.currency || "ZAR")} ${Number(it.price || 0).toLocaleString()}</div>
+        ${countdownChip(it.expires_at)}
         <p class="muted small" style="margin:0">${esc(it.category || "General")} · ${esc(it.location || "—")}</p>
         <p class="muted small" style="margin:0">
           ${esc(seller.full_name || "Unknown seller")}
@@ -1543,6 +1468,7 @@ function serviceCardHTML(s) {
         <div class="price">${esc(s.currency || "ZAR")} ${Number(s.price || 0).toLocaleString()}
           <span class="small muted">${esc(pricing)}</span>
         </div>
+        ${countdownChip(s.expires_at)}
         <p class="muted small" style="margin:0">
           ${esc(MODE_LABEL[s.delivery_mode] || s.delivery_mode)}
           ${s.duration_minutes ? `· ${s.duration_minutes} min` : ""}
@@ -1590,7 +1516,7 @@ $("#svcClear").addEventListener("click", () => {
 });
 
 /* ============================================================
-   ITEM MODAL
+   MODALS
    ============================================================ */
 function openItemModal(it) {
   activeItem = it;
@@ -1629,9 +1555,6 @@ function openItemModal(it) {
   $("#modal").classList.remove("hidden");
 }
 
-/* ============================================================
-   SERVICE MODAL
-   ============================================================ */
 function openServiceModal(s) {
   activeService = s;
   const imgs = Array.isArray(s.images) && s.images.length ? s.images : [];
@@ -1695,6 +1618,21 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
+document.addEventListener("click", (e) => {
+  const card = e.target.closest(".card");
+  if (!card) return;
+  const kind = card.dataset.kind;
+  const id   = card.dataset.id;
+
+  if (kind === "item") {
+    const it = allItems.find(i => i.id === id);
+    if (it) openItemModal(it);
+  } else if (kind === "service") {
+    const s = allServices.find(x => x.id === id);
+    if (s) openServiceModal(s);
+  }
+});
+
 /* ============================================================
    BOOKING REQUEST
    ============================================================ */
@@ -1750,38 +1688,37 @@ $("#addSlot").addEventListener("click", () => addSlot());
 /* ============================================================
    IMAGE PICKERS
    ============================================================ */
-function bindImagePicker({ dropZone, input, filesRef, renderFn }) {
-  dropZone.addEventListener("click", () => input.click());
-  ["dragenter","dragover"].forEach(ev => dropZone.addEventListener(ev, (e) => {
-    e.preventDefault(); dropZone.style.borderColor = "var(--accent)";
+function bindImagePicker({ dropSel, inputSel, filesRef, renderFn }) {
+  const drop  = $(dropSel);
+  const input = $(inputSel);
+  drop.addEventListener("click", () => input.click());
+  ["dragenter","dragover"].forEach(ev => drop.addEventListener(ev, (e) => {
+    e.preventDefault(); drop.style.borderColor = "var(--accent)";
   }));
-  ["dragleave","drop"].forEach(ev => dropZone.addEventListener(ev, (e) => {
-    e.preventDefault(); dropZone.style.borderColor = "";
+  ["dragleave","drop"].forEach(ev => drop.addEventListener(ev, (e) => {
+    e.preventDefault(); drop.style.borderColor = "";
   }));
-  dropZone.addEventListener("drop", (e) => filesRef.add(e.dataTransfer.files));
+  drop.addEventListener("drop", (e) => filesRef.add(e.dataTransfer.files));
   input.addEventListener("change", (e) => { filesRef.add(e.target.files); e.target.value = ""; });
 }
 
-const itemFiles = {
-  list: [],
-  add(fileList) {
-    const incoming = Array.from(fileList || []).filter(f => f.type.startsWith("image/"));
-    if (!incoming.length) return;
-    const room = MAX_IMAGES - this.list.length;
-    if (room <= 0) return toast(`Maximum of ${MAX_IMAGES} pictures reached.`, "err");
-    if (incoming.length > room) toast(`Only ${room} more picture(s) allowed — extras skipped.`, "err");
-    this.list = this.list.concat(incoming.slice(0, room));
-    renderItemPreviews();
-  }
+itemFiles.add = function(fileList) {
+  const incoming = Array.from(fileList || []).filter(f => f.type.startsWith("image/"));
+  if (!incoming.length) return;
+  const room = MAX_IMAGES - this.list.length;
+  if (room <= 0) return toast(`Maximum of ${MAX_IMAGES} pictures reached.`, "err");
+  if (incoming.length > room) toast(`Only ${room} more picture(s) allowed — extras skipped.`, "err");
+  this.list = this.list.concat(incoming.slice(0, room));
+  renderItemPreviews();
 };
 
 function renderItemPreviews() {
   const box = $("#previews");
-  previewUrls.forEach(u => URL.revokeObjectURL(u));
-  previewUrls = [];
+  itemPreviewUrls.forEach(u => URL.revokeObjectURL(u));
+  itemPreviewUrls = [];
   box.innerHTML = itemFiles.list.map((file, i) => {
     const url = URL.createObjectURL(file);
-    previewUrls.push(url);
+    itemPreviewUrls.push(url);
     return `<div class="pv"><img src="${url}" alt=""><button type="button" data-i="${i}">✕</button></div>`;
   }).join("");
   box.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
@@ -1791,81 +1728,38 @@ function renderItemPreviews() {
   $("#imgCounter").textContent = `${itemFiles.list.length} / ${MAX_IMAGES} pictures selected`;
 }
 
-const svcFilesObj = {
-  list: [],
-  add(fileList) {
-    const incoming = Array.from(fileList || []).filter(f => f.type.startsWith("image/"));
-    if (!incoming.length) return;
-    const room = MAX_IMAGES - this.list.length;
-    if (room <= 0) return toast(`Maximum of ${MAX_IMAGES} pictures reached.`, "err");
-    if (incoming.length > room) toast(`Only ${room} more picture(s) allowed — extras skipped.`, "err");
-    this.list = this.list.concat(incoming.slice(0, room));
-    renderSvcPreviews();
-  }
+svcFiles.add = function(fileList) {
+  const incoming = Array.from(fileList || []).filter(f => f.type.startsWith("image/"));
+  if (!incoming.length) return;
+  const room = MAX_IMAGES - this.list.length;
+  if (room <= 0) return toast(`Maximum of ${MAX_IMAGES} pictures reached.`, "err");
+  if (incoming.length > room) toast(`Only ${room} more picture(s) allowed — extras skipped.`, "err");
+  this.list = this.list.concat(incoming.slice(0, room));
+  renderSvcPreviews();
 };
 
 function renderSvcPreviews() {
   const box = $("#svcPreviews");
   svcPreviewUrls.forEach(u => URL.revokeObjectURL(u));
   svcPreviewUrls = [];
-  box.innerHTML = svcFilesObj.list.map((file, i) => {
+  box.innerHTML = svcFiles.list.map((file, i) => {
     const url = URL.createObjectURL(file);
     svcPreviewUrls.push(url);
     return `<div class="pv"><img src="${url}" alt=""><button type="button" data-i="${i}">✕</button></div>`;
   }).join("");
   box.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
-    svcFilesObj.list.splice(Number(b.dataset.i), 1);
+    svcFiles.list.splice(Number(b.dataset.i), 1);
     renderSvcPreviews();
   }));
-  $("#svcImgCounter").textContent = `${svcFilesObj.list.length} / ${MAX_IMAGES} pictures selected`;
+  $("#svcImgCounter").textContent = `${svcFiles.list.length} / ${MAX_IMAGES} pictures selected`;
 }
 
-bindImagePicker({
-  dropZone: $("#dropZone"),
-  input: $("#itemImages"),
-  filesRef: itemFiles
-});
-bindImagePicker({
-  dropZone: $("#svcDropZone"),
-  input: $("#svcImages"),
-  filesRef: svcFilesObj
-});
+bindImagePicker({ dropSel: "#dropZone",    inputSel: "#itemImages", filesRef: itemFiles, renderFn: renderItemPreviews });
+bindImagePicker({ dropSel: "#svcDropZone", inputSel: "#svcImages",  filesRef: svcFiles,  renderFn: renderSvcPreviews });
 
 /* ============================================================
-   UPLOAD HELPER
+   WATERMARK ENGINE
    ============================================================ */
-async function uploadImages(files, subfolder = "") {
-  const urls = [];
-  const prefix = subfolder ? `${subfolder}/` : "";
-  const isVerified = currentProfile?.verified === true;
-
-  for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-
-    let fileToUpload = file;
-    try {
-      fileToUpload = await watermarkImage(file, isVerified);
-    } catch (err) {
-      console.warn('Watermark failed, uploading original:', err.message);
-    }
-
-    const clean = fileToUpload.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-    const path  = `${currentUser.id}/${prefix}${Date.now()}-${i}-${clean}`;
-
-    const { error: upErr } = await sb.storage.from(BUCKET)
-      .upload(path, fileToUpload, { cacheControl: "3600", upsert: false });
-
-    if (upErr) throw new Error("Image upload failed: " + upErr.message);
-
-    const { data: pub } = sb.storage.from(BUCKET).getPublicUrl(path);
-    urls.push(pub.publicUrl);
-  }
-  return urls;
-}
-  /* ============================================================
-   IMAGE WATERMARKING
-   ============================================================ */
-
 function roundRect(ctx, x, y, w, h, r) {
   ctx.beginPath();
   ctx.moveTo(x + r, y);
@@ -1904,7 +1798,7 @@ async function watermarkImage(file, isVerified) {
       const brandFont = Math.max(14, minDim * 0.026);
       const badgeFont = Math.max(13, minDim * 0.024);
 
-      // Brand watermark with D logo (bottom-left)
+      // Brand pill with D logo
       ctx.save();
       ctx.font = `700 ${brandFont}px system-ui, -apple-system, "Segoe UI", Arial, sans-serif`;
       const brandText = 'Dynamic Market Place';
@@ -1947,7 +1841,7 @@ async function watermarkImage(file, isVerified) {
       ctx.fillText(brandText, logoX + logoSize + gap, pillY + pillH / 2 + 1);
       ctx.restore();
 
-      // Verified badge (bottom-right)
+      // Verified badge
       if (isVerified) {
         ctx.save();
         ctx.font = `800 ${badgeFont}px system-ui, -apple-system, "Segoe UI", Arial, sans-serif`;
@@ -1985,6 +1879,38 @@ async function watermarkImage(file, isVerified) {
     img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read image')); };
     img.src = url;
   });
+}
+
+/* ============================================================
+   UPLOAD HELPER
+   ============================================================ */
+async function uploadImages(files, subfolder = "") {
+  const urls = [];
+  const prefix = subfolder ? `${subfolder}/` : "";
+  const isVerified = currentProfile?.verified === true;
+
+  for (let i = 0; i < files.length; i++) {
+    const file = files[i];
+
+    let fileToUpload = file;
+    try {
+      fileToUpload = await watermarkImage(file, isVerified);
+    } catch (err) {
+      console.warn('Watermark failed, uploading original:', err.message);
+    }
+
+    const clean = fileToUpload.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const path  = `${currentUser.id}/${prefix}${Date.now()}-${i}-${clean}`;
+
+    const { error: upErr } = await sb.storage.from(BUCKET)
+      .upload(path, fileToUpload, { cacheControl: "3600", upsert: false });
+
+    if (upErr) throw new Error("Image upload failed: " + upErr.message);
+
+    const { data: pub } = sb.storage.from(BUCKET).getPublicUrl(path);
+    urls.push(pub.publicUrl);
+  }
+  return urls;
 }
 
 /* ============================================================
@@ -2038,7 +1964,7 @@ $("#resetBtn").addEventListener("click", () => {
 $("#serviceForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!currentUser) return toast("Please sign in first.", "err");
-  if (!svcFilesObj.list.length) return toast("Please add at least one picture of your service.", "err");
+  if (!svcFiles.list.length) return toast("Please add at least one picture of your service.", "err");
 
   const f = new FormData(e.target);
   const mode = f.get("delivery_mode");
@@ -2052,7 +1978,7 @@ $("#serviceForm").addEventListener("submit", async (e) => {
   busy(btn, true, "Uploading…");
 
   try {
-    const urls = await uploadImages(svcFilesObj.list, "services");
+    const urls = await uploadImages(svcFiles.list, "services");
 
     btn.innerHTML = `<span class="spin"></span>Saving service…`;
     const parseList = (v) => String(v || "").split(",").map(x => x.trim()).filter(Boolean);
@@ -2091,7 +2017,7 @@ $("#serviceForm").addEventListener("submit", async (e) => {
 
     toast("✅ Service published!", "ok");
     e.target.reset();
-    svcFilesObj.list = []; renderSvcPreviews();
+    svcFiles.list = []; renderSvcPreviews();
     $("#slots").innerHTML = ""; addSlot();
     await loadServices();
     switchPage("services");
@@ -2103,7 +2029,7 @@ $("#serviceForm").addEventListener("submit", async (e) => {
 });
 
 $("#svcResetBtn").addEventListener("click", () => {
-  svcFilesObj.list = []; renderSvcPreviews();
+  svcFiles.list = []; renderSvcPreviews();
   setTimeout(() => {
     $("#serviceForm").reset();
     $("#slots").innerHTML = ""; addSlot();
@@ -2112,7 +2038,7 @@ $("#svcResetBtn").addEventListener("click", () => {
 });
 
 /* ============================================================
-   BOOKINGS
+   BOOKINGS — LIST VIEW
    ============================================================ */
 async function loadBookings() {
   const { data, error } = await sb.from("service_bookings")
@@ -2204,8 +2130,8 @@ function renderBookings() {
   box.innerHTML = list.map(b => bookingCardHTML(b, bookingsTab)).join("");
 }
 
-$$(".section-tab").forEach(t => t.addEventListener("click", () => {
-  $$(".section-tab").forEach(x => x.classList.toggle("active", x === t));
+$$(".section-tab[data-bk]").forEach(t => t.addEventListener("click", () => {
+  $$(".section-tab[data-bk]").forEach(x => x.classList.toggle("active", x === t));
   bookingsTab = t.dataset.bk;
   renderBookings();
 }));
@@ -2223,119 +2149,223 @@ document.addEventListener("click", async (e) => {
 });
 
 /* ============================================================
-   GLOBAL CARD CLICK
+   BOOKINGS — CALENDAR VIEW
    ============================================================ */
-document.addEventListener("click", (e) => {
-  const card = e.target.closest(".card");
-  if (!card) return;
-  const kind = card.dataset.kind;
-  const id   = card.dataset.id;
+async function loadCalendarBookings() {
+  const start = new Date(calDate.getFullYear(), calDate.getMonth() - 1, 1);
+  const end   = new Date(calDate.getFullYear(), calDate.getMonth() + 2, 0);
 
-  if (kind === "item") {
-    const it = allItems.find(i => i.id === id);
-    if (it) openItemModal(it);
-  } else if (kind === "service") {
-    const s = allServices.find(x => x.id === id);
-    if (s) openServiceModal(s);
+  const { data, error } = await sb.from('service_bookings')
+    .select('id, scheduled_at, status, customer_id, provider_id, service:services!service_id(title)')
+    .gte('scheduled_at', start.toISOString())
+    .lte('scheduled_at', end.toISOString())
+    .in('status', ['requested', 'accepted', 'completed'])
+    .order('scheduled_at', { ascending: true })
+    .limit(500);
+
+  if (error) {
+    console.warn('Calendar load failed:', error.message);
+    calBookings = [];
+    return;
   }
-});
-  /* ============================================================
-   LISTING RENEWAL
-   ============================================================ */
-async function renewListing(kind, id) {
-  const btn = event.target;
-  busy(btn, true, "…");
-  const { error } = await sb.rpc('renew_listing', {
-    p_kind: kind,
-    p_id: id
-  });
-  busy(btn, false, "Renew");
-  if (error) return toast("Renewal failed: " + error.message, "err");
-  toast("✅ Listing renewed for another 60 days!", "ok");
-  await Promise.all([loadItems(), loadServices()]);
-  renderListingHealth();
+  calBookings = data || [];
 }
 
-/* ============================================================
-   LISTING HEALTH BANNER
-   ============================================================ */
-async function renderListingHealth() {
-  const box = document.getElementById('listingHealth');
+function renderCalendar() {
+  const grid = document.getElementById('calGrid');
+  const monthEl = document.getElementById('calMonth');
+  if (!grid || !monthEl) return;
+
+  const year  = calDate.getFullYear();
+  const month = calDate.getMonth();
+
+  monthEl.textContent = calDate.toLocaleDateString('en-ZA', { month: 'long', year: 'numeric' });
+
+  const firstOfMonth = new Date(year, month, 1);
+  const startWeekday = firstOfMonth.getDay();
+  const daysInMonth  = new Date(year, month + 1, 0).getDate();
+  const daysInPrev   = new Date(year, month, 0).getDate();
+
+  const byDay = {};
+  for (const b of calBookings) {
+    const d = new Date(b.scheduled_at);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    if (!byDay[key]) byDay[key] = [];
+    byDay[key].push(b);
+  }
+
+  const today = new Date();
+  const todayKey = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+  const cells = [];
+
+  for (let i = startWeekday - 1; i >= 0; i--) {
+    const d = daysInPrev - i;
+    cells.push(`<div class="cal-cell empty other-month"><span class="day-num">${d}</span></div>`);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const key = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayBookings = byDay[key] || [];
+    const isToday = key === todayKey;
+    const isSelected = key === calSelectedDay;
+
+    let dots = '';
+    if (dayBookings.length) {
+      const hasCustomer = dayBookings.some(b => b.customer_id === currentUser.id);
+      const hasProvider = dayBookings.some(b => b.provider_id === currentUser.id);
+      if (hasCustomer && hasProvider) dots = '<span class="dot dot-both"></span>';
+      else if (hasCustomer) dots = '<span class="dot dot-customer"></span>';
+      else if (hasProvider) dots = '<span class="dot dot-provider"></span>';
+    }
+
+    const badge = dayBookings.length > 1
+      ? `<div class="cal-badge">${dayBookings.length}</div>` : '';
+
+    cells.push(`
+      <div class="cal-cell ${isToday ? 'today' : ''} ${isSelected ? 'selected' : ''}" data-day="${key}">
+        ${badge}
+        <span class="day-num">${d}</span>
+        <div class="dots">${dots}</div>
+      </div>`);
+  }
+
+  const totalCells = startWeekday + daysInMonth;
+  const trailing = (7 - (totalCells % 7)) % 7;
+  for (let d = 1; d <= trailing; d++) {
+    cells.push(`<div class="cal-cell empty other-month"><span class="day-num">${d}</span></div>`);
+  }
+
+  grid.innerHTML = cells.join('');
+
+  grid.querySelectorAll('.cal-cell[data-day]').forEach(cell => {
+    cell.addEventListener('click', () => {
+      calSelectedDay = cell.dataset.day;
+      renderCalendar();
+      renderDayDetail(calSelectedDay, byDay);
+    });
+  });
+}
+
+function renderDayDetail(dayKey, byDay) {
+  const box = document.getElementById('calDayDetail');
   if (!box) return;
 
-  const { data, error } = await sb.from('listing_health').select('*');
-  if (error || !data) { box.innerHTML = ''; return; }
-
-  const expired = data.filter(x => x.status === 'expired');
-  const expiringSoon = data.filter(x => {
-    if (x.status !== 'active') return false;
-    const days = Math.floor((new Date(x.expires_at) - new Date()) / 86400000);
-    return days <= 7 && days >= 0;
-  });
-
-  if (!expired.length && !expiringSoon.length) { box.innerHTML = ''; return; }
-
-  let html = '';
-
-  if (expiringSoon.length) {
-    html += `
-      <div class="banner" style="margin-bottom:14px">
-        ⏰ <b>${expiringSoon.length} listing(s) expiring within 7 days.</b>
-        Renew them to keep them visible on the marketplace.
-        <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
-          ${expiringSoon.map(x => `
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;background:#0c1524;padding:10px 14px;border-radius:10px;border:1px solid #4a3a12">
-              <span>${esc(x.title)} <span class="small muted">· expires ${new Date(x.expires_at).toLocaleDateString()}</span></span>
-              <button class="btn primary sm" onclick="renewListing('${x.kind}','${x.id}')">Renew</button>
-            </div>`).join('')}
-        </div>
-      </div>`;
+  const dayBookings = byDay[dayKey] || [];
+  if (!dayBookings.length) {
+    box.innerHTML = `<h3>${new Date(dayKey + 'T00:00').toLocaleDateString('en-ZA', { weekday: 'long', day: 'numeric', month: 'long' })}</h3>
+      <p class="empty">No bookings on this day.</p>`;
+    box.classList.remove('hidden');
+    return;
   }
 
-  if (expired.length) {
-    html += `
-      <div class="banner err" style="margin-bottom:14px">
-        ⚠️ <b>${expired.length} listing(s) expired</b> and are no longer visible on the marketplace.
-        Renew them within 30 days to restore them.
-        <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
-          ${expired.map(x => `
-            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;background:#1a0f10;padding:10px 14px;border-radius:10px;border:1px solid #7a1e26">
-              <span>${esc(x.title)} <span class="small muted">· expired ${new Date(x.expires_at).toLocaleDateString()}</span></span>
-              <button class="btn primary sm" onclick="renewListing('${x.kind}','${x.id}')">Renew</button>
-            </div>`).join('')}
+  const html = dayBookings.map(b => {
+    const role = b.provider_id === currentUser.id ? 'Provider' : 'Customer';
+    const roleColor = role === 'Provider' ? 'var(--accent2)' : 'var(--accent)';
+    const time = new Date(b.scheduled_at).toLocaleTimeString('en-ZA', {
+      hour: '2-digit', minute: '2-digit', hour12: false
+    });
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #16223a">
+        <div>
+          <div style="font-weight:700;font-size:14px">${esc(b.service?.title || 'Service')}</div>
+          <div class="small muted">${time} · <span style="color:${roleColor};font-weight:700">${role}</span></div>
         </div>
+        <span class="pill ${esc(b.status)}">${esc(b.status)}</span>
       </div>`;
-  }
+  }).join('');
 
-  box.innerHTML = html;
+  box.innerHTML = `
+    <h3>${new Date(dayKey + 'T00:00').toLocaleDateString('en-ZA', { weekday: 'long', day: 'numeric', month: 'long' })}</h3>
+    ${html}`;
+  box.classList.remove('hidden');
 }
+
+async function initCalendar() {
+  await loadCalendarBookings();
+  renderCalendar();
+}
+
+document.getElementById('calPrev')?.addEventListener('click', async () => {
+  calDate = new Date(calDate.getFullYear(), calDate.getMonth() - 1, 1);
+  calSelectedDay = null;
+  document.getElementById('calDayDetail')?.classList.add('hidden');
+  await loadCalendarBookings();
+  renderCalendar();
+});
+document.getElementById('calNext')?.addEventListener('click', async () => {
+  calDate = new Date(calDate.getFullYear(), calDate.getMonth() + 1, 1);
+  calSelectedDay = null;
+  document.getElementById('calDayDetail')?.classList.add('hidden');
+  await loadCalendarBookings();
+  renderCalendar();
+});
+document.getElementById('calToday')?.addEventListener('click', async () => {
+  calDate = new Date();
+  const now = new Date();
+  calSelectedDay = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  await loadCalendarBookings();
+  renderCalendar();
+  const byDay = {};
+  for (const b of calBookings) {
+    const d = new Date(b.scheduled_at);
+    const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    if (!byDay[key]) byDay[key] = [];
+    byDay[key].push(b);
+  }
+  renderDayDetail(calSelectedDay, byDay);
+});
+
+$$("[data-view]").forEach(tab => {
+  tab.addEventListener("click", () => {
+    $$("[data-view]").forEach(t => t.classList.toggle("active", t === tab));
+    const view = tab.dataset.view;
+    bookingsView = view;
+    document.getElementById('calendarView').classList.toggle('hidden', view !== 'calendar');
+    document.getElementById('listView').classList.toggle('hidden', view !== 'list');
+    if (view === 'calendar') initCalendar();
+    else renderBookings();
+  });
+});
 
 /* ============================================================
-   PAGE ROUTER
+   PROFILE PAGE ACTIONS
    ============================================================ */
-function switchPage(name) {
-  $$(".page").forEach(p => p.classList.toggle("hidden", p.id !== "page-" + name));
-  $$(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.page === name));
-  if (name === "profile")  renderProfilePage();
-  renderlistinghealth();
-  if (name === "bookings") loadBookings();
-  if (name === "offer")    renderOfferNotice();
-}
-$$(".tab-btn").forEach(b => b.addEventListener("click", () => switchPage(b.dataset.page)));
+$("#refreshProfileBtn").addEventListener("click", async () => {
+  await loadProfile(currentUser);
+  renderUserChip(); renderVerifyBanner(); renderOfferNotice(); renderProfilePage(); renderListingHealth();
+  toast("Profile refreshed.", "ok");
+});
 
-  /* ============================================================
+$("#myListingsBtn").addEventListener("click", () => {
+  const box = $("#myListings");
+  if (myListingsMode === "items") { box.innerHTML = ""; myListingsMode = ""; return; }
+  const mine = allItems.filter(i => i.seller_id === currentUser.id);
+  box.innerHTML = mine.length ? mine.map(itemCardHTML).join("")
+    : `<p class="empty">You have not listed any items yet.</p>`;
+  myListingsMode = "items";
+});
+
+$("#myServicesBtn").addEventListener("click", () => {
+  const box = $("#myListings");
+  if (myListingsMode === "services") { box.innerHTML = ""; myListingsMode = ""; return; }
+  const mine = allServices.filter(s => s.provider_id === currentUser.id);
+  box.innerHTML = mine.length ? mine.map(serviceCardHTML).join("")
+    : `<p class="empty">You have not published any services yet.</p>`;
+  myListingsMode = "services";
+});
+
+/* ============================================================
    LIVE CLOCK
    ============================================================ */
 function startClock() {
   const timeEl = document.getElementById('clockTime');
   const dateEl = document.getElementById('clockDate');
   if (!timeEl || !dateEl) return;
-
   function tick() {
     const now = new Date();
     timeEl.textContent = now.toLocaleTimeString('en-ZA', {
-      hour: '2-digit', minute: '2-digit', second: '2-digit',
-      hour12: false
+      hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
     });
     dateEl.textContent = now.toLocaleDateString('en-ZA', {
       weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
@@ -2345,17 +2375,37 @@ function startClock() {
   setInterval(tick, 1000);
 }
 startClock();
+
 /* ============================================================
-   INITIALISE
+   PAGE ROUTER
+   ============================================================ */
+function switchPage(name) {
+  $$(".page").forEach(p => p.classList.toggle("hidden", p.id !== "page-" + name));
+  $$(".tab-btn").forEach(b => b.classList.toggle("active", b.dataset.page === name));
+
+  if (name === "profile") {
+    renderProfilePage();
+    renderListingHealth();
+  }
+  if (name === "bookings") {
+    loadBookings();
+    if (bookingsView === "calendar") initCalendar();
+  }
+  if (name === "offer") {
+    renderOfferNotice();
+  }
+}
+$$(".tab-btn").forEach(b => b.addEventListener("click", () => switchPage(b.dataset.page)));
+
+/* ============================================================
+   INIT
    ============================================================ */
 addSlot(1, "09:00", "17:00");
 addSlot(6, "10:00", "14:00");
 </script>
 
 <!-- ============================================================
-     GitHub Pages SPA REDIRECT HANDLER
-     This catches the redirect from /404.html and restores the URL
-     so Supabase can read the confirmation token from the query.
+     GITHUB PAGES SPA REDIRECT HANDLER
      ============================================================ -->
 <script>
   (function(l) {
