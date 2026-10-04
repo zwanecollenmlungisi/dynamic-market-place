@@ -2438,6 +2438,11 @@ $$(".tab-btn").forEach(b => b.addEventListener("click", () => switchPage(b.datas
    ============================================================ */
 addSlot(1, "09:00", "17:00");
 addSlot(6, "10:00", "14:00");
+// Auto-open signup tab when linked with #signup
+if (window.location.hash === '#signup') {
+  const signupTab = document.querySelector('.tab[data-tab="signup"]');
+  if (signupTab) signupTab.click();
+}
 </script>
 
 <!-- ============================================================
