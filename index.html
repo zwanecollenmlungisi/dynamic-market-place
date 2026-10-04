@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dynamic Market Place — Buy & Sell Safely in South Africa</title>
+<meta name="description" content="Dynamic Market Place is South Africa's verified marketplace. Buy and sell products, book trusted services. Every member is identity-verified. 0% commission." />
+<style>
+  :root{
+    --bg:#070d1a; --panel:#101a2e; --panel2:#0c1524; --line:#1e2b45;
+    --txt:#e6eefc; --muted:#8fa3c4; --accent:#22d3ee; --accent2:#6366f1;
+    --ok:#22c55e; --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--txt);min-height:100vh;line-height:1.65;
+    background:
+      radial-gradient(1200px 700px at 12% -12%, #16305a 0%, transparent 60%),
+      radial-gradient(1000px 600px at 102% -5%, #2b1a5e 0%, transparent 55%),
+      var(--bg);
+  }
+  a{color:var(--accent);text-decoration:none}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 22px}
+
+  /* NAVBAR */
+  nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(7,13,26,.86);backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{
+    display:flex;align-items:center;gap:18px;padding:14px 22px;flex-wrap:wrap;
+  }
+  .logo-row{display:flex;align-items:center;gap:11px}
+  .logo{
+    width:42px;height:42px;border-radius:12px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:grid;place-items:center;font-size:21px;color:#04121f;font-weight:800;
+  }
+  .logo-row h1{font-size:17px;margin:0;letter-spacing:.2px}
+  .logo-row p{margin:0;font-size:11.5px;color:var(--muted);letter-spacing:.5px}
+  nav .spacer{flex:1}
+  nav .links{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+  nav .links a{
+    color:var(--muted);padding:9px 14px;border-radius:10px;
+    font-size:13.5px;font-weight:600;transition:.15s;
+  }
+  nav .links a:hover{color:var(--txt);background:#16223a}
+  .btn{
+    border:1px solid var(--line);background:#16223a;color:var(--txt);
+    padding:11px 20px;border-radius:11px;cursor:pointer;font-size:14px;font-weight:700;
+    transition:.15s;display:inline-block;text-align:center;
+  }
+  .btn:hover{background:#1d2c49;transform:translateY(-1px)}
+  .btn.primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border:none;color:#04121f;
+  }
+  .btn.primary:hover{filter:brightness(1.08)}
+  .btn.lg{padding:15px 32px;font-size:15.5px;border-radius:12px}
+
+  /* HERO */
+  .hero{padding:80px 0 60px;text-align:center}
+  .hero .badge{
+    display:inline-flex;align-items:center;gap:8px;
+    background:rgba(34,211,238,.12);border:1px solid rgba(34,211,238,.3);
+    color:var(--accent);padding:7px 16px;border-radius:20px;
+    font-size:12.5px;font-weight:800;letter-spacing:.5px;
+    text-transform:uppercase;margin-bottom:22px;
+  }
+  .hero h2{
+    font-size:clamp(32px,5vw,52px);line-height:1.15;margin:0 0 20px;
+    font-weight:800;letter-spacing:-1px;
+  }
+  .hero h2 .grad{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p{
+    font-size:clamp(15px,2vw,18px);color:var(--muted);
+    max-width:640px;margin:0 auto 32px;line-height:1.65;
+  }
+  .hero .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:18px}
+  .hero .small-note{color:var(--muted);font-size:12.5px}
+
+  /* TRUST STRIP */
+  .trust-strip{
+    display:flex;justify-content:center;gap:32px;flex-wrap:wrap;
+    padding:28px 22px;border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);margin:40px 0;
+    color:var(--muted);font-size:13.5px;font-weight:600;
+  }
+  .trust-strip div{display:flex;align-items:center;gap:8px}
+  .trust-strip .tick{color:var(--ok);font-size:15px}
+
+  /* SECTION */
+  section{padding:60px 0}
+  .section-head{text-align:center;margin-bottom:44px}
+  .section-head .kicker{
+    color:var(--accent);font-size:12.5px;font-weight:800;
+    letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;
+  }
+  .section-head h3{
+    font-size:clamp(24px,3.5vw,34px);margin:0 0 12px;
+    font-weight:800;letter-spacing:-.6px;
+  }
+  .section-head p{color:var(--muted);font-size:15px;max-width:560px;margin:0 auto}
+
+  /* FEATURE CARDS */
+  .grid3{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
+  }
+  .card{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);padding:28px;
+    transition:.2s;
+  }
+  .card:hover{border-color:#2c4470;transform:translateY(-3px)}
+  .card .ico{
+    width:52px;height:52px;border-radius:14px;
+    background:linear-gradient(135deg,rgba(34,211,238,.15),rgba(99,102,241,.15));
+    border:1px solid rgba(34,211,238,.25);
+    display:grid;place-items:center;font-size:24px;margin-bottom:18px;
+  }
+  .card h4{font-size:17px;margin:0 0 8px;font-weight:800}
+  .card p{color:var(--muted);font-size:14px;margin:0;line-height:1.6}
+
+  /* STEPS */
+  .steps{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:24px;counter-reset:s;
+  }
+  .step{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);padding:28px;position:relative;
+  }
+  .step::before{
+    counter-increment:s;content:counter(s);
+    position:absolute;top:-16px;left:22px;
+    width:38px;height:38px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#04121f;display:grid;place-items:center;
+    font-weight:800;font-size:16px;border:4px solid var(--bg);
+  }
+  .step h4{margin:14px 0 8px;font-size:16px;font-weight:800}
+  .step p{color:var(--muted);font-size:13.5px;margin:0;line-height:1.6}
+
+  /* PRICING */
+  .price-block{
+    background:var(--panel);border:2px solid var(--accent);
+    border-radius:20px;padding:40px;max-width:520px;margin:0 auto;
+    text-align:center;
+  }
+  .price-block .label{
+    color:var(--accent);font-size:12.5px;font-weight:800;
+    letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;
+  }
+  .price-block .amount{
+    font-size:56px;font-weight:800;letter-spacing:-2px;
+    line-height:1;color:var(--txt);
+  }
+  .price-block .sub{color:var(--muted);font-size:14px;margin-top:8px}
+  .price-block ul{
+    list-style:none;padding:24px 0 0;margin:24px 0 0;
+    border-top:1px solid var(--line);text-align:left;
+  }
+  .price-block li{
+    display:flex;align-items:flex-start;gap:10px;
+    padding:9px 0;font-size:14px;color:#c4d3ec;
+  }
+  .price-block li .tick{color:var(--ok);font-weight:800}
+  .price-block .btn{margin-top:26px;width:100%}
+
+  /* FAQ */
+  .faq{max-width:760px;margin:0 auto}
+  .faq-item{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:12px;padding:20px 22px;margin-bottom:12px;
+  }
+  .faq-item h4{
+    font-size:15px;margin:0 0 8px;font-weight:800;
+    display:flex;justify-content:space-between;align-items:center;gap:12px;
+    cursor:pointer;
+  }
+  .faq-item h4::after{content:'+';color:var(--accent);font-size:20px;font-weight:800}
+  .faq-item.open h4::after{content:'−'}
+  .faq-item p{
+    color:var(--muted);font-size:14px;margin:0;line-height:1.65;
+    max-height:0;overflow:hidden;transition:.25s;
+  }
+  .faq-item.open p{max-height:300px;margin-top:10px}
+
+  /* FINAL CTA */
+  .final-cta{
+    background:linear-gradient(135deg,#0e7490,#4f46e5);
+    border-radius:24px;padding:60px 32px;text-align:center;color:#fff;
+    margin:20px 0 40px;
+  }
+  .final-cta h3{font-size:clamp(24px,3.5vw,32px);margin:0 0 12px;color:#fff;font-weight:800}
+  .final-cta p{opacity:.92;font-size:15px;max-width:520px;margin:0 auto 26px}
+  .final-cta .btn{
+    background:#fff;color:#0e7490;border:none;font-weight:800;
+  }
+  .final-cta .btn:hover{background:#f0fdff;transform:translateY(-2px)}
+
+  /* FOOTER */
+  footer{
+    border-top:1px solid var(--line);
+    padding:48px 0 32px;color:var(--muted);font-size:13px;
+  }
+  .footer-grid{
+    display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;
+    margin-bottom:36px;
+  }
+  @media(max-width:760px){.footer-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.footer-grid{grid-template-columns:1fr}}
+  .footer-grid h5{
+    color:var(--txt);font-size:13px;font-weight:800;
+    letter-spacing:.6px;text-transform:uppercase;margin:0 0 14px;
+  }
+  .footer-grid ul{list-style:none;padding:0;margin:0}
+  .footer-grid li{margin-bottom:9px}
+  .footer-grid a{color:var(--muted);font-size:13px}
+  .footer-grid a:hover{color:var(--accent)}
+  .footer-bottom{
+    border-top:1px solid var(--line);padding-top:24px;
+    display:flex;justify-content:space-between;gap:14px;
+    flex-wrap:wrap;font-size:12.5px;
+  }
+  .footer-bottom .secure{color:#5a6b85}
+
+  /* MOBILE */
+  @media(max-width:640px){
+    .hero{padding:50px 0 40px}
+    .hero h2{letter-spacing:-.5px}
+    section{padding:44px 0}
+    .price-block{padding:30px 22px}
+    .price-block .amount{font-size:44px}
+    nav .links a{padding:8px 10px;font-size:12.5px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== NAVBAR ==================== -->
+<nav>
+  <div class="wrap">
+    <div class="logo-row">
+      <div class="logo">D</div>
+      <div>
+        <h1>Dynamic Market Place</h1>
+        <p>Buy · Sell · Connect</p>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="about.html">About</a>
+      <a href="app.html" class="btn primary">Sign in / Sign up</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ==================== HERO ==================== -->
+<header class="hero">
+  <div class="wrap">
+    <div class="badge">🔒 Verified Members Only</div>
+    <h2>
+      South Africa's <span class="grad">verified marketplace</span><br>
+      for buying, selling &amp; services
+    </h2>
+    <p>
+      Every buyer and seller on Dynamic Market Place is identity-verified —
+      full name, ID number, email and phone. No scams, no time-wasters,
+      no commission. Just real people trading real value.
+    </p>
+    <div class="cta">
+      <a href="app.html#signup" class="btn primary lg">Create your account</a>
+      <a href="app.html" class="btn lg">Sign in</a>
+    </div>
+    <p class="small-note">
+      12 months of access for R258.75 (incl. VAT) · 0% commission on every sale
+    </p>
+  </div>
+</header>
+
+<!-- ==================== TRUST STRIP ==================== -->
+<div class="trust-strip">
+  <div><span class="tick">✓</span> ID-verified sellers</div>
+  <div><span class="tick">✓</span> Secure Yoco payments</div>
+  <div><span class="tick">✓</span> Direct buyer contact</div>
+  <div><span class="tick">✓</span> 0% commission</div>
+</div>
+
+<!-- ==================== FEATURES ==================== -->
+<section id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Why Dynamic Market Place</div>
+      <h3>Built for trust and real trades</h3>
+      <p>Everything you need to buy and sell safely — nothing you don't.</p>
+    </div>
+    <div class="grid3">
+      <div class="card">
+        <div class="ico">🛡️</div>
+        <h4>Verified identity</h4>
+        <p>Every member submits their full name, ID number, email and phone before joining. Duplicate accounts are blocked at the database level.</p>
+      </div>
+      <div class="card">
+        <div class="ico">💰</div>
+        <h4>Zero commission</h4>
+        <p>We never take a cut of your sales. You keep 100% of what you earn. Our only income is the annual membership fee.</p>
+      </div>
+      <div class="card">
+        <div class="ico">📷</div>
+        <h4>Up to 10 photos per listing</h4>
+        <p>Present your products and services properly. Every listing is automatically watermarked with the platform badge.</p>
+      </div>
+      <div class="card">
+        <div class="ico">💆</div>
+        <h4>Products AND services</h4>
+        <p>Sell physical items and also publish bookable services — wellness, beauty, fitness, tutoring, home services and more.</p>
+      </div>
+      <div class="card">
+        <div class="ico">📅</div>
+        <h4>Built-in bookings</h4>
+        <p>Service providers set weekly availability, receive booking requests, and manage them directly from the app.</p>
+      </div>
+      <div class="card">
+        <div class="ico">📞</div>
+        <h4>Direct customer contact</h4>
+        <p>Buyers reach you directly by phone or email. No middlemen, no messaging queues, no hidden fees.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== HOW IT WORKS ==================== -->
+<section id="how" style="background:rgba(12,21,36,.5);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Simple to start</div>
+      <h3>Up and running in minutes</h3>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <h4>Create your account</h4>
+        <p>Register with your full name, ID or passport number, email and mobile phone.</p>
+      </div>
+      <div class="step">
+        <h4>Confirm &amp; pay</h4>
+        <p>Verify your email, then pay your R258.75 annual membership securely via Yoco.</p>
+      </div>
+      <div class="step">
+        <h4>List or browse</h4>
+        <p>Publish items or services with up to 10 photos — or start browsing verified listings immediately.</p>
+      </div>
+      <div class="step">
+        <h4>Trade directly</h4>
+        <p>Contact buyers or sellers directly. Arrange payment and delivery on your own terms.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== PRICING ==================== -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Transparent pricing</div>
+      <h3>One simple fee. No surprises.</h3>
+      <p>No commission. No listing fees. No hidden charges.</p>
+    </div>
+    <div class="price-block">
+      <div class="label">12-Month Membership</div>
+      <div class="amount">R258.75</div>
+      <div class="sub">R225.00 + 15% VAT · once-off payment</div>
+      <ul>
+        <li><span class="tick">✓</span> Unlimited item listings with up to 10 photos each</li>
+        <li><span class="tick">✓</span> Unlimited service listings with weekly availability</li>
+        <li><span class="tick">✓</span> Receive bookings directly from customers</li>
+        <li><span class="tick">✓</span> Verified badge on all your listings</li>
+        <li><span class="tick">✓</span> Direct phone and email contact from buyers</li>
+        <li><span class="tick">✓</span> 0% commission — you keep 100% of your sales</li>
+        <li><span class="tick">✓</span> Tax invoice issued for every payment</li>
+      </ul>
+      <a href="app.html#signup" class="btn primary lg">Get started now</a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FAQ ==================== -->
+<section id="faq" style="background:rgba(12,21,36,.5);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Questions</div>
+      <h3>Frequently asked</h3>
+    </div>
+    <div class="faq">
+      <div class="faq-item">
+        <h4>Is Dynamic Market Place free to use?</h4>
+        <p>Registration is free, but you need an active 12-month membership (R258.75 including VAT) to list items, publish services, or contact other members. This is a once-off payment — not a recurring subscription.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Does the platform take commission on my sales?</h4>
+        <p>No. We take 0% commission. Whatever you sell an item or service for, you keep the full amount. The only cost is the annual membership fee.</p>
+      </div>
+      <div class="faq-item">
+        <h4>How are members verified?</h4>
+        <p>Every member provides their full legal name, ID or passport number, verified email address and mobile phone number during registration. Duplicate accounts are blocked automatically at the database level.</p>
+      </div>
+      <div class="faq-item">
+        <h4>How do payments between buyers and sellers work?</h4>
+        <p>All payments for goods and services are handled directly between the buyer and the seller, on whatever terms you agree. Dynamic Market Place is not a party to those transactions — we simply connect verified buyers and sellers.</p>
+      </div>
+      <div class="faq-item">
+        <h4>Can I sell services, not just products?</h4>
+        <p>Yes. Our Services module supports wellness, beauty, fitness, tutoring, home services, photography, event services and more. Service providers can set weekly availability and receive bookings directly in the app.</p>
+      </div>
+      <div class="faq-item">
+        <h4>How long does a listing stay live?</h4>
+        <p>Every listing stays active for 60 days. You'll be notified before it expires, and can renew it with one click to keep it live for another 60 days.</p>
+      </div>
+      <div class="faq-item">
+        <h4>What is your refund policy?</h4>
+        <p>If you request a refund in writing within 14 days of payment and haven't used the platform to list, publish, or contact members, we will refund in full. See our <a href="legal.html#refund">Refund Policy</a> for details.</p>
+      </div>
+      <div class="faq-item">
+        <h4>How do I delete my account?</h4>
+        <p>You can permanently delete your account and all associated data at any time from your Profile page in the app, or by emailing us directly. See our <a href="legal.html#privacy">Privacy Policy</a> for details.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FINAL CTA ==================== -->
+<section>
+  <div class="wrap">
+    <div class="final-cta">
+      <h3>Ready to join South Africa's most trusted marketplace?</h3>
+      <p>Create your verified account today and start buying, selling, or offering services within minutes.</p>
+      <a href="app.html#signup" class="btn lg">Create your account →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="logo-row" style="margin-bottom:12px">
+          <div class="logo">D</div>
+          <div>
+            <h1>Dynamic Market Place</h1>
+            <p>Buy · Sell · Connect</p>
+          </div>
+        </div>
+        <p style="color:var(--muted);font-size:13px;line-height:1.7;max-width:300px">
+          A verified South African marketplace where every buyer and seller
+          is identity-checked. Zero commission. Real people. Real trades.
+        </p>
+      </div>
+      <div>
+        <h5>Platform</h5>
+        <ul>
+          <li><a href="app.html">Sign in</a></li>
+          <li><a href="app.html#signup">Create account</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Company</h5>
+        <ul>
+          <li><a href="about.html">About us</a></li>
+          <li><a href="about.html#contact">Contact</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5>Legal</h5>
+        <ul>
+          <li><a href="legal.html#privacy">Privacy Policy</a></li>
+          <li><a href="legal.html#terms">Terms of Service</a></li>
+          <li><a href="legal.html#refund">Refund Policy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>
+        © <span id="year"></span> Dynamic Market Place. All rights reserved.
+      </div>
+      <div class="secure">
+        Secure payments processed by <strong style="color:#9fb6da">Yoco</strong>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-item h4').forEach(h => {
+    h.addEventListener('click', () => {
+      h.parentElement.classList.toggle('open');
+    });
+  });
+</script>
+</body>
+</html>
