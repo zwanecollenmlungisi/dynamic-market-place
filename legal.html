@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Legal — Dynamic Market Place</title>
+<style>
+  :root{
+    --bg:#070d1a; --panel:#101a2e; --panel2:#0c1524; --line:#1e2b45;
+    --txt:#e6eefc; --muted:#8fa3c4; --accent:#22d3ee; --accent2:#6366f1;
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--txt);min-height:100vh;line-height:1.7;
+    background:
+      radial-gradient(1100px 600px at 12% -12%, #16305a 0%, transparent 60%),
+      radial-gradient(900px 520px at 102% -5%, #2b1a5e 0%, transparent 55%),
+      var(--bg);
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:40px 22px 80px}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:28px;text-decoration:none;color:inherit}
+  .logo{
+    width:44px;height:44px;border-radius:13px;flex:0 0 auto;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:grid;place-items:center;font-size:22px;color:#04121f;font-weight:800;
+  }
+  .brand h1{font-size:19px;margin:0}
+  .brand p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+  .back{
+    display:inline-block;margin-bottom:24px;color:var(--accent);
+    text-decoration:none;font-size:13.5px;font-weight:600;
+  }
+  .back:hover{text-decoration:underline}
+
+  .tabs{display:flex;gap:6px;background:var(--panel2);padding:5px;border-radius:12px;
+        margin-bottom:28px;border:1px solid var(--line);flex-wrap:wrap}
+  .tab{
+    padding:10px 18px;border:none;background:transparent;color:var(--muted);
+    border-radius:9px;cursor:pointer;font-weight:700;font-size:13.5px;
+  }
+  .tab.active{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#04121f}
+
+  .panel{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:var(--radius);padding:32px;
+  }
+  .panel h2{font-size:22px;margin:0 0 6px}
+  .panel .meta{color:var(--muted);font-size:12.5px;margin-bottom:24px}
+  .panel h3{font-size:15.5px;margin:28px 0 8px;color:var(--accent);font-weight:800}
+  .panel p{margin:0 0 14px;color:#c4d3ec;font-size:14.5px}
+  .panel ul{margin:0 0 14px;padding-left:22px;color:#c4d3ec;font-size:14.5px}
+  .panel li{margin-bottom:6px}
+  .panel strong{color:var(--txt)}
+  .panel a{color:var(--accent)}
+  .hidden{display:none !important}
+  .fill{background:#1a0f10;border-bottom:2px dotted #ef4444;padding:0 6px;color:#ffb3b3;font-weight:700}
+  footer{
+    text-align:center;color:var(--muted);font-size:12.5px;
+    margin-top:40px;padding-top:24px;border-top:1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="index.html" class="brand">
+    <div class="logo">D</div>
+    <div>
+      <h1>Dynamic Market Place</h1>
+      <p>Buy · Sell · Connect</p>
+    </div>
+  </a>
+
+  <a href="index.html" class="back">← Back to marketplace</a>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="privacy"  type="button">Privacy Policy</button>
+    <button class="tab"        data-tab="terms"    type="button">Terms of Service</button>
+    <button class="tab"        data-tab="refund"   type="button">Refund Policy</button>
+  </div>
+
+  <!-- ==================== PRIVACY ==================== -->
+  <section id="tab-privacy" class="panel">
+    <h2>Privacy Policy</h2>
+    <div class="meta">Last updated: <span class="fill">30 Sept 2026</span> · POPIA Compliant</div>
+
+    <p>
+      Dynamic Market Place ("we", "us", "our") is committed to protecting your privacy
+      in accordance with the Protection of Personal Information Act 4 of 2013 (POPIA)
+      of the Republic of South Africa. This Privacy Policy explains what personal
+      information we collect, why we collect it, how we use it, and your rights in
+      respect of that information.
+    </p>
+
+    <h3>1. Who We Are</h3>
+    <p>
+      Dynamic Market Place is an online marketplace that connects buyers and sellers
+      of goods and services in South Africa. We are the "responsible party" for the
+      purposes of POPIA.
+    </p>
+    <p>
+      Registered business name: <span class="fill">Collen M Zwane</span><br>
+      Physical address: <span class="fill">377 Kanyamazane 1214</span><br>
+      Email: <span class="fill">dynamicmarketplace22@gmail.com</span><br>
+      Phone: <span class="fill">0788682541</span>
+    </p>
+
+    <h3>2. Information We Collect</h3>
+    <p>When you register and use Dynamic Market Place, we collect:</p>
+    <ul>
+      <li><strong>Identity information:</strong> full name, ID or passport number</li>
+      <li><strong>Contact information:</strong> email address, phone number</li>
+      <li><strong>Location information:</strong> country, city or town</li>
+      <li><strong>Authentication information:</strong> encrypted password</li>
+      <li><strong>Listing information:</strong> items, services, descriptions, images you upload</li>
+      <li><strong>Transaction information:</strong> payment records for your membership</li>
+      <li><strong>Technical information:</strong> IP address, device type, and login timestamps</li>
+    </ul>
+
+    <h3>3. Why We Collect This Information</h3>
+    <ul>
+      <li>To verify your identity and prevent fraud, duplicate accounts, and abuse</li>
+      <li>To provide you with access to the marketplace and its features</li>
+      <li>To process your membership payment securely through Yoco</li>
+      <li>To enable buyers and sellers to contact each other directly</li>
+      <li>To comply with legal obligations under South African law</li>
+      <li>To improve the platform and prevent misuse</li>
+    </ul>
+
+    <h3>4. How We Store Your Information</h3>
+    <p>
+      Your information is stored on secure servers provided by Supabase (Supabase Inc.),
+      which uses industry-standard encryption at rest and in transit. Uploaded images
+      are stored in isolated cloud storage and served only through signed or public URLs
+      as appropriate. Payment information is never stored on our servers — it is
+      processed directly by Yoco, our PCI-DSS compliant payment provider.
+    </p>
+
+    <h3>5. Who We Share Your Information With</h3>
+    <p>We do <strong>not</strong> sell your personal information. We share it only with:</p>
+    <ul>
+      <li><strong>Yoco</strong> — to process your membership payment</li>
+      <li><strong>Supabase</strong> — to host our database, authentication, and storage</li>
+      <li><strong>Other users</strong> — your full name, city, and phone number are visible to other members when you list an item or service, so buyers and sellers can contact each other</li>
+      <li><strong>Law enforcement</strong> — where we are legally required to disclose information</li>
+    </ul>
+
+    <h3>6. Your Rights Under POPIA</h3>
+    <p>You have the right to:</p>
+    <ul>
+      <li>Access the personal information we hold about you</li>
+      <li>Request correction of inaccurate information</li>
+      <li>Request deletion of your personal information</li>
+      <li>Object to the processing of your information</li>
+      <li>Lodge a complaint with the Information Regulator of South Africa</li>
+    </ul>
+    <p>
+      To exercise any of these rights, email us at
+      <span class="fill">dynamicmarketplace22@gmail.com</span>.
+    </p>
+
+    <h3>7. Retention</h3>
+    <p>
+      We keep your personal information for as long as your account is active and for
+      a period thereafter as required by South African tax and legal requirements.
+      Listings that expire are retained for 30 days and then removed.
+    </p>
+
+    <h3>8. Security</h3>
+    <p>
+      We take reasonable technical and organisational measures to protect your
+      personal information against loss, damage, and unauthorised access. However,
+      no system is completely secure, and we cannot guarantee absolute security.
+    </p>
+
+    <h3>9. Cookies and Tracking</h3>
+    <p>
+      We use only essential cookies and local storage required for authentication
+      and session management. We do not use third-party advertising or tracking cookies.
+    </p>
+
+    <h3>10. Changes to This Policy</h3>
+    <p>
+      We may update this Privacy Policy from time to time. The latest version will
+      always be available on this page.
+    </p>
+
+    <h3>11. Information Officer</h3>
+    <p>
+      In terms of POPIA, our designated Information Officer is:
+      <span class="fill">Collen M Zwane</span><br>
+      Email: <span class="fill">dynamicmarketplace22@gmail.com</span>
+    </p>
+  </section>
+
+  <!-- ==================== TERMS ==================== -->
+  <section id="tab-terms" class="panel hidden">
+    <h2>Terms of Service</h2>
+    <div class="meta">Last updated: <span class="fill">30 Sept 2026</span></div>
+
+    <h3>1. Acceptance of Terms</h3>
+    <p>
+      By registering and using Dynamic Market Place, you agree to be bound by these
+      Terms of Service. If you do not agree, you must not use the platform.
+    </p>
+
+    <h3>2. Membership</h3>
+    <p>
+      Access to Dynamic Market Place requires a once-off membership fee of
+      <strong>R225.00 plus 15% VAT (R258.75 total)</strong> for a 12-month period.
+      Membership is required to list items, publish services, or contact other members.
+    </p>
+    <p>
+      Membership does not automatically renew. You will be reminded before expiry
+      and may choose to renew. If you do not renew, your account remains on file
+      but you will lose access to listing and purchasing features.
+    </p>
+
+    <h3>3. Your Responsibilities</h3>
+    <p>As a member, you agree to:</p>
+    <ul>
+      <li>Provide accurate, truthful, and current information during registration</li>
+      <li>Keep your login credentials confidential</li>
+      <li>Not use the platform for any illegal, fraudulent, or misleading activity</li>
+      <li>Not post offensive, infringing, or prohibited content</li>
+      <li>Conduct yourself with respect toward other members</li>
+      <li>Comply with all applicable South African laws</li>
+    </ul>
+
+    <h3>4. Listings</h3>
+    <p>
+      Sellers and service providers are solely responsible for the accuracy and
+      legality of their listings. All listings expire after 60 days and may be
+      renewed by the seller.
+    </p>
+    <p>
+      We reserve the right to remove any listing that violates these Terms, without
+      refund and without notice.
+    </p>
+
+    <h3>5. Transactions Between Members</h3>
+    <p>
+      Dynamic Market Place is a marketplace that connects buyers and sellers.
+      <strong>We are not a party to any transaction between members.</strong>
+      All payments for goods and services are arranged directly between the buyer
+      and the seller, on whatever terms they agree.
+    </p>
+    <p>
+      We do not hold funds in escrow, mediate disputes, or guarantee the quality,
+      safety, or legality of any item or service listed. You transact at your own risk.
+    </p>
+
+    <h3>6. Prohibited Items and Services</h3>
+    <p>You may not list or offer:</p>
+    <ul>
+      <li>Illegal goods or services of any kind</li>
+      <li>Stolen property</li>
+      <li>Counterfeit or pirated goods</li>
+      <li>Weapons, ammunition, or explosives</li>
+      <li>Live animals (except where expressly permitted by law)</li>
+      <li>Human remains, body parts, or bodily fluids</li>
+      <li>Drugs or controlled substances</li>
+      <li>Sexual services or commercial sexual content</li>
+      <li>Anything that infringes intellectual property rights</li>
+    </ul>
+
+    <h3>7. Suspension and Termination</h3>
+    <p>
+      We reserve the right to suspend or terminate any account that:
+    </p>
+    <ul>
+      <li>Violates these Terms</li>
+      <li>Is used for fraud, abuse, or harassment</li>
+      <li>Posts prohibited content</li>
+      <li>Engages in any activity that harms other members or the platform</li>
+    </ul>
+    <p>
+      Termination for cause does not entitle the member to a refund of the
+      membership fee.
+    </p>
+
+    <h3>8. Limitation of Liability</h3>
+    <p>
+      To the maximum extent permitted by law, Dynamic Market Place shall not be
+      liable for any direct, indirect, incidental, or consequential damages arising
+      from your use of the platform, including (without limitation) damages arising
+      from transactions between members.
+    </p>
+
+    <h3>9. Intellectual Property</h3>
+    <p>
+      All platform content, trademarks, and design belong to Dynamic Market Place.
+      Content you upload (photos, descriptions) remains yours, but you grant us a
+      non-exclusive, royalty-free license to display and watermark it on the platform
+      for as long as your listing is active.
+    </p>
+
+    <h3>10. Changes to These Terms</h3>
+    <p>
+      We may update these Terms at any time. Continued use of the platform after
+      changes are posted constitutes acceptance of the updated Terms.
+    </p>
+
+    <h3>11. Governing Law</h3>
+    <p>
+      These Terms are governed by the laws of the Republic of South Africa. Any
+      dispute will be subject to the exclusive jurisdiction of the South African courts.
+    </p>
+  </section>
+
+  <!-- ==================== REFUND ==================== -->
+  <section id="tab-refund" class="panel hidden">
+    <h2>Refund Policy</h2>
+    <div class="meta">Last updated: <span class="fill">30 Sept 2026</span></div>
+
+    <h3>1. Nature of the Fee</h3>
+    <p>
+      The Dynamic Market Place membership fee of <strong>R258.75 (including 15% VAT)</strong>
+      is a once-off payment that grants you 12 months of access to the platform.
+      It is not a deposit, does not cover goods or services purchased from other
+      members, and is not refundable on a pro-rata basis.
+    </p>
+
+    <h3>2. When a Refund Applies</h3>
+    <p>You may request a full refund within <strong>14 days</strong> of payment if:</p>
+    <ul>
+      <li>You have not listed any items or services on the platform</li>
+      <li>You have not contacted any other member through the platform</li>
+      <li>You request the refund in writing to <span class="fill">dynamicmarketplace22@gmail.com</span></li>
+    </ul>
+
+    <h3>3. When a Refund Does Not Apply</h3>
+    <p>Refunds will not be issued if:</p>
+    <ul>
+      <li>You have already used the platform to list, publish, or contact members</li>
+      <li>You have violated the Terms of Service</li>
+      <li>More than 14 days have passed since payment</li>
+      <li>The refund request relates to dissatisfaction with another member's goods or services (that is a matter between you and the other member)</li>
+    </ul>
+
+    <h3>4. How to Request a Refund</h3>
+    <p>
+      Email <span class="fill">dynamicmarketplace22@gmail.com</span> with your full name,
+      registered email address, and payment reference. We will process approved
+      refunds within <strong>7 business days</strong> to the original payment method.
+    </p>
+
+    <h3>5. Consumer Protection</h3>
+    <p>
+      This policy does not exclude any rights you may have under the Consumer
+      Protection Act 68 of 2008 of South Africa.
+    </p>
+
+    <h3>6. Contact</h3>
+    <p>
+      For all refund questions, contact us at
+      <span class="fill">dynamicmarketplace22@gmail.com</span>.
+    </p>
+  </section>
+
+  <footer>
+    © <span id="year"></span> Dynamic Market Place · All rights reserved
+  </footer>
+</div>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t === tab));
+      document.querySelectorAll('.panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById('tab-' + tab.dataset.tab).classList.remove('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // Support direct linking: legal.html#terms
+  const hash = window.location.hash.replace('#', '');
+  if (['privacy','terms','refund'].includes(hash)) {
+    document.querySelector(`.tab[data-tab="${hash}"]`)?.click();
+  }
+</script>
+</body>
+</html>
