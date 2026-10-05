@@ -1142,7 +1142,120 @@ function routeByStatus(status) {
     default:        showPaymentGate(); break;
   }
 }
+/* ============================================================
+   GATE SCREENS
+   ============================================================ */
+function setGate(html) {
+  $("#appTopbar").classList.add("hidden");
+  $("#appContent").classList.add("hidden");
+  const g = $("#gateContainer");
+  g.classList.remove("hidden");
+  g.innerHTML = html;
+}
 
+function clearGate() {
+  const g = $("#gateContainer");
+  g.classList.add("hidden");
+  g.innerHTML = "";
+}
+
+function showPaymentGate() {
+  setGate(`
+    <div class="gate-wrap">
+      <div class="gate-card">
+        <div class="logo">D</div>
+        <h1>Welcome to Dynamic Market Place</h1>
+        <p class="lead">Hi ${esc(currentProfile?.full_name || 'there')} — you're almost in. Activate your 12-month marketplace membership to start buying and selling.</p>
+        <div class="price-box">
+          <div class="kv"><span>Platform Access Fee (12 months)</span><b>R 225.00</b></div>
+          <div class="kv"><span>VAT (15%)</span><b>R 33.75</b></div>
+          <div class="kv"><span>Total Due Today</span><b class="total">R 258.75</b></div>
+        </div>
+        <button class="btn primary wide" id="payNowBtn" style="padding:14px;font-size:16px" onclick="initiateYocoPayment('membership')">Pay R 258.75 with Yoco</button>
+        <p class="small muted" style="margin-top:16px;line-height:1.5">Once-off payment for 12 months of marketplace access. Optional renewal. All buyer–seller transactions are handled directly between the parties.</p>
+        <button class="btn ghost" style="margin-top:14px" onclick="signOutNow()">Sign out</button>
+      </div>
+    </div>
+  `);
+}
+
+function showRenewalGate() {
+  setGate(`
+    <div class="gate-wrap">
+      <div class="gate-card">
+        <div class="logo" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">⏳</div>
+        <h1>Your Membership Has Expired</h1>
+        <p class="lead">Hi ${esc(currentProfile?.full_name || 'there')} — your 12-month access to Dynamic Market Place has ended. Renew today to keep buying and selling.</p>
+        <div class="price-box">
+          <div class="kv"><span>Renewal Fee (12 months)</span><b>R 225.00</b></div>
+          <div class="kv"><span>VAT (15%)</span><b>R 33.75</b></div>
+          <div class="kv"><span>Total Due Today</span><b class="total">R 258.75</b></div>
+        </div>
+        <button class="btn primary wide" id="payNowBtn" style="padding:14px;font-size:16px" onclick="initiateYocoPayment('renewal')">Renew Now — R 258.75</button>
+        <p class="small muted" style="margin-top:16px;line-height:1.5">Your account, listings and history are preserved. Renewing simply restores your access for another 12 months.</p>
+        <button class="btn ghost" style="margin-top:14px" onclick="signOutNow()">Sign out</button>
+      </div>
+    </div>
+  `);
+}
+
+function showPendingGate() {
+  setGate(`
+    <div class="gate-wrap">
+      <div class="gate-card">
+        <div class="logo">⏱</div>
+        <h1>Payment Processing…</h1>
+        <p class="lead">We're waiting for Yoco to confirm your payment. This usually takes a few seconds. Click refresh once you've completed the payment on the Yoco page.</p>
+        <button class="btn primary wide" onclick="location.reload()">Refresh status</button>
+        <button class="btn ghost wide" style="margin-top:10px" onclick="cancelAndRetry()">Cancel payment and try again</button>
+        <button class="btn ghost wide" style="margin-top:10px" onclick="signOutNow()">Sign out</button>
+      </div>
+    </div>
+  `);
+}
+
+function showCancelledGate() {
+  setGate(`
+    <div class="gate-wrap">
+      <div class="gate-card">
+        <div class="logo" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">✕</div>
+        <h1>Payment Cancelled</h1>
+        <p class="lead">Hi ${esc(currentProfile?.full_name || 'there')} — it looks like the payment was cancelled or not completed. No charge was made to your card.</p>
+        <div class="price-box">
+          <div class="kv"><span>Platform Access Fee (12 months)</span><b>R 225.00</b></div>
+          <div class="kv"><span>VAT (15%)</span><b>R 33.75</b></div>
+          <div class="kv"><span>Total Due Today</span><b class="total">R 258.75</b></div>
+        </div>
+        <button class="btn primary wide" id="payNowBtn" style="padding:14px;font-size:16px" onclick="initiateYocoPayment('membership')">Try again — R 258.75</button>
+        <p class="small muted" style="margin-top:16px;line-height:1.5">Once-off payment for 12 months of marketplace access. Optional renewal.</p>
+        <button class="btn ghost" style="margin-top:14px" onclick="signOutNow()">Sign out</button>
+      </div>
+    </div>
+  `);
+}
+
+async function cancelAndRetry() {
+  try { await sb.rpc('cancel_pending_payments'); } catch (_) { /* ignore */ }
+  showCancelledGate();
+}
+
+function showMarketplace() {
+  clearGate();
+  $("#appTopbar").classList.remove("hidden");
+  $("#appContent").classList.remove("hidden");
+
+  renderUserChip();
+  renderVerifyBanner();
+  renderOfferNotice();
+  switchPage("market");
+
+  Promise.all([
+    loadCategories(),
+    loadItems(),
+    loadServices(),
+    loadBookings()
+  ]).catch(err => console.warn('initial load:', err.message));
+}
 /* ============================================================
    GATES
    ============================================================ */
