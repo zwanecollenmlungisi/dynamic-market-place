@@ -1080,10 +1080,44 @@ async function enterApp(user) {
   }
 
   const payResult = sessionStorage.getItem('paymentResult');
+  sessionStorage.removeItem('paymentResult');
+
+  // Handle cancelled or failed payments — mark pending records cancelled and show retry screen
+  if (payResult === 'cancelled' || payResult === 'failed') {
+    try { await sb.rpc('cancel_pending_payments'); } catch (_) { /* ignore */ }
+    showCancelledGate();
+    return;
+  }
+
+  // Handle successful payment — poll for the webhook to update the record
   if (payResult === 'success' && status === 'pending') {
     status = await pollForActive(20000);
   }
-  sessionStorage.removeItem('paymentResult');
+
+  // If still 'pending' after a cancelled/failed result or no result at all,
+  // we treat it as an abandoned attempt rather than a processing one.
+  if (status === 'pending' && payResult !== 'success') {
+    // Safety: don't mark it cancelled if the record is very recent (webhook may still be in-flight)
+    const { data: latest } = await sb.from('payments')
+      .select('created_at')
+      .eq('user_id', currentUser.id)
+      .eq('status', 'pending')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    const ageMs = latest ? (Date.now() - new Date(latest.created_at).getTime()) : Infinity;
+
+    if (ageMs > 5 * 60 * 1000) {
+      // Older than 5 minutes — safe to mark cancelled
+      try { await sb.rpc('cancel_pending_payments'); } catch (_) { /* ignore */ }
+      showCancelledGate();
+      return;
+    }
+    // Fresh — let the processing screen handle it (webhook might still fire)
+  }
+
+  routeByStatus(status);
 
   routeByStatus(status);
 }
@@ -1125,26 +1159,59 @@ function clearGate() {
   g.innerHTML = "";
 }
 
-function showPaymentGate() {
+function showPendingGate() {
   setGate(`
     <div class="gate-wrap">
       <div class="gate-card">
-        <div class="logo">D</div>
-        <h1>Welcome to Dynamic Market Place</h1>
-        <p class="lead">Hi ${esc(currentProfile?.full_name || 'there')} — you're almost in. Activate your 12-month marketplace membership to start buying and selling.</p>
-        <div class="price-box">
-          <div class="kv"><span>Platform Access Fee (12 months)</span><b>R 225.00</b></div>
-          <div class="kv"><span>VAT (15%)</span><b>R 33.75</b></div>
-          <div class="kv"><span>Total Due Today</span><b class="total">R 258.75</b></div>
-        </div>
-        <button class="btn primary wide" id="payNowBtn" style="padding:14px;font-size:16px" onclick="initiateYocoPayment('membership')">Pay R 258.75 with Yoco</button>
-        <p class="small muted" style="margin-top:16px;line-height:1.5">Once-off payment for 12 months of marketplace access. Optional renewal. All buyer–seller transactions are handled directly between the parties.</p>
-        <button class="btn ghost" style="margin-top:14px" onclick="signOutNow()">Sign out</button>
+        <div class="logo">⏱</div>
+        <h1>Payment Processing…</h1>
+        <p class="lead">
+          We're waiting for Yoco to confirm your payment. This usually takes a few seconds.
+          Click refresh once you've completed the payment on the Yoco page.
+        </p>
+        <button class="btn primary wide" onclick="location.reload()">Refresh status</button>
+        <button class="btn ghost wide" style="margin-top:10px" onclick="cancelAndRetry()">
+          Cancel payment and try again
+        </button>
+        <button class="btn ghost wide" style="margin-top:10px" onclick="signOutNow()">Sign out</button>
       </div>
     </div>
   `);
 }
 
+async function cancelAndRetry() {
+  try { await sb.rpc('cancel_pending_payments'); } catch (_) { /* ignore */ }
+  showCancelledGate();
+}
+
+function showCancelledGate() {
+  setGate(`
+    <div class="gate-wrap">
+      <div class="gate-card">
+        <div class="logo" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">✕</div>
+        <h1>Payment Cancelled</h1>
+        <p class="lead">
+          Hi ${esc(currentProfile?.full_name || 'there')} — it looks like the payment was cancelled
+          or not completed. No charge was made to your card.
+        </p>
+        <div class="price-box">
+          <div class="kv"><span>Platform Access Fee (12 months)</span><b>R 225.00</b></div>
+          <div class="kv"><span>VAT (15%)</span><b>R 33.75</b></div>
+          <div class="kv"><span>Total Due Today</span><b class="total">R 258.75</b></div>
+        </div>
+        <button class="btn primary wide" id="payNowBtn"
+          style="padding:14px;font-size:16px"
+          onclick="initiateYocoPayment('membership')">
+          Try again — R 258.75
+        </button>
+        <p class="small muted" style="margin-top:16px;line-height:1.5">
+          Once-off payment for 12 months of marketplace access. Optional renewal.
+        </p>
+        <button class="btn ghost" style="margin-top:14px" onclick="signOutNow()">Sign out</button>
+      </div>
+    </div>
+  `);
+}  
 function showRenewalGate() {
   setGate(`
     <div class="gate-wrap">
